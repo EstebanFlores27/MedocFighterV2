@@ -69,4 +69,6 @@ func _skip() -> void:
 	_go_to_map()
 
 func _go_to_map() -> void:
+	GameState.intro_seen = true
+	GameState.save_to_disk()
 	get_tree().change_scene_to_file("res://scenes/city_map.tscn")
