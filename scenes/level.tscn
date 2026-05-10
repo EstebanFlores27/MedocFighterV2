@@ -1,11 +1,13 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player.tscn" id="1_player"]
+[ext_resource type="PackedScene" path="res://scenes/chronik.tscn" id="2_chronik"]
+[ext_resource type="PackedScene" path="res://scenes/combat_hud.tscn" id="3_hud"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_floor"]
 size = Vector2(4000, 100)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_wallL"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall"]
 size = Vector2(50, 1200)
 
 [node name="Level" type="Node2D"]
@@ -48,13 +50,13 @@ shape = SubResource("RectangleShape2D_floor")
 position = Vector2(-1975, -600)
 
 [node name="WallLCollider" type="CollisionShape2D" parent="WallLeft"]
-shape = SubResource("RectangleShape2D_wallL")
+shape = SubResource("RectangleShape2D_wall")
 
 [node name="WallRight" type="StaticBody2D" parent="."]
 position = Vector2(1975, -600)
 
 [node name="WallRCollider" type="CollisionShape2D" parent="WallRight"]
-shape = SubResource("RectangleShape2D_wallL")
+shape = SubResource("RectangleShape2D_wall")
 
 [node name="Player" parent="." instance=ExtResource("1_player")]
 position = Vector2(0, -100)
@@ -69,12 +71,14 @@ limit_bottom = 100
 position_smoothing_enabled = true
 position_smoothing_speed = 15.0
 
-[node name="HUD" type="CanvasLayer" parent="."]
+[node name="Cortexia" parent="." instance=ExtResource("2_chronik")]
+position = Vector2(1100, -100)
+chronik_id = "cortexia"
+display_name = "Cortexia"
+max_hp = 60
+contact_damage = 10
+move_speed = 240.0
+color = Color(0.85, 0.45, 0.85, 1)
+victory_text = "Tu viens de protéger tes commandes centrales. Ton cerveau conserve toute sa vivacité et sa lucidité !"
 
-[node name="HelpText" type="Label" parent="HUD"]
-offset_left = 40.0
-offset_top = 40.0
-offset_right = 800.0
-offset_bottom = 120.0
-text = "◀ ▶ : se déplacer    ▲ / Espace : sauter    ▼ : se baisser    X : frapper"
-horizontal_alignment = 0
+[node name="CombatHUD" parent="." instance=ExtResource("3_hud")]

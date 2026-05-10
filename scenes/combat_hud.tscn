@@ -1,0 +1,140 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/combat_hud.gd" id="1_hud"]
+
+[node name="CombatHUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="TopLeft" type="Control" parent="Root"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 40.0
+offset_right = 460.0
+offset_bottom = 120.0
+mouse_filter = 2
+
+[node name="PlayerHpLabelTitle" type="Label" parent="Root/TopLeft"]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 28.0
+text = "TOI"
+
+[node name="PlayerHpBar" type="ProgressBar" parent="Root/TopLeft"]
+layout_mode = 0
+offset_top = 30.0
+offset_right = 420.0
+offset_bottom = 60.0
+max_value = 100.0
+value = 100.0
+
+[node name="PlayerHpLabel" type="Label" parent="Root/TopLeft"]
+layout_mode = 0
+offset_top = 62.0
+offset_right = 420.0
+offset_bottom = 90.0
+text = "100 / 100"
+
+[node name="TopCenter" type="Control" parent="Root"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_top = 0.0
+anchor_bottom = 0.0
+offset_left = -210.0
+offset_top = 40.0
+offset_right = 210.0
+offset_bottom = 130.0
+mouse_filter = 2
+
+[node name="ChronikName" type="Label" parent="Root/TopCenter"]
+layout_mode = 0
+offset_right = 420.0
+offset_bottom = 28.0
+horizontal_alignment = 1
+text = "Cortexia"
+
+[node name="ChronikHpBar" type="ProgressBar" parent="Root/TopCenter"]
+layout_mode = 0
+offset_top = 30.0
+offset_right = 420.0
+offset_bottom = 60.0
+max_value = 60.0
+value = 60.0
+
+[node name="CountdownLabel" type="Label" parent="Root"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -120.0
+offset_right = 200.0
+offset_bottom = 120.0
+theme_override_font_sizes/font_size = 160
+horizontal_alignment = 1
+vertical_alignment = 1
+text = "3"
+
+[node name="VictoryPanel" type="Panel" parent="Root"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -360.0
+offset_top = -200.0
+offset_right = 360.0
+offset_bottom = 200.0
+
+[node name="VBox" type="VBoxContainer" parent="Root/VictoryPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -24.0
+
+[node name="Title" type="Label" parent="Root/VictoryPanel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 56
+horizontal_alignment = 1
+text = "BRAVO !"
+
+[node name="Body" type="Label" parent="Root/VictoryPanel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 22
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+text = ""
+
+[node name="ContinueButton" type="Button" parent="Root/VictoryPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 28
+text = "  Continuer  "
+
+[node name="Help" type="Label" parent="Root"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = -60.0
+offset_right = 1200.0
+offset_bottom = -20.0
+text = "◀ ▶ : se déplacer    ▲ / Espace : sauter    ▼ : se baisser    X : frapper"
