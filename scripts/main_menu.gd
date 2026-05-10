@@ -12,7 +12,7 @@ func _ready() -> void:
 
 func _on_new_game() -> void:
 	GameState.reset_progress()
-	get_tree().change_scene_to_file("res://scenes/city_map.tscn")
+	get_tree().change_scene_to_file("res://scenes/intro.tscn")
 
 func _on_quit() -> void:
 	get_tree().quit()
