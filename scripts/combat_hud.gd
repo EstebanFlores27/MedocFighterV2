@@ -1,5 +1,16 @@
 extends CanvasLayer
 
+const MED_LABELS := {
+	"soin": "Soin\n+20 PV",
+	"vitesse": "Vitesse\nx2 vitesse",
+	"force": "Force\nx2 dégâts",
+}
+const MED_KEYS := {
+	KEY_1: "soin",
+	KEY_2: "vitesse",
+	KEY_3: "force",
+}
+
 @onready var player_hp_bar: ProgressBar = $Root/TopLeft/PlayerHpBar
 @onready var player_hp_label: Label = $Root/TopLeft/PlayerHpLabel
 @onready var chronik_panel: Control = $Root/TopCenter
@@ -10,16 +21,44 @@ extends CanvasLayer
 @onready var victory_title: Label = $Root/VictoryPanel/VBox/Title
 @onready var victory_body: Label = $Root/VictoryPanel/VBox/Body
 @onready var continue_btn: Button = $Root/VictoryPanel/VBox/ContinueButton
+@onready var med_box: HBoxContainer = $Root/MedBox
+@onready var med_btns := {
+	"soin": $Root/MedBox/SoinBtn as Button,
+	"vitesse": $Root/MedBox/VitesseBtn as Button,
+	"force": $Root/MedBox/ForceBtn as Button,
+}
+@onready var buff_label: Label = $Root/BuffLabel
+
+var _last_charges: Dictionary = {"soin": 1, "vitesse": 1, "force": 1}
 
 func _ready() -> void:
 	chronik_panel.visible = false
 	countdown_label.visible = false
 	victory_panel.visible = false
+	buff_label.visible = false
 	GameState.player_hp_changed.connect(_on_player_hp_changed)
 	GameState.chronik_engaged.connect(_on_chronik_engaged)
 	GameState.chronik_hp_changed.connect(_on_chronik_hp_changed)
 	GameState.chronik_defeated.connect(_on_chronik_defeated)
+	GameState.med_inventory_changed.connect(_on_med_inventory_changed)
+	GameState.player_buff_changed.connect(_on_buff_changed)
 	continue_btn.pressed.connect(_on_continue_pressed)
+	for med_id in med_btns:
+		var btn: Button = med_btns[med_id]
+		btn.pressed.connect(_on_med_pressed.bind(med_id))
+	_refresh_med_buttons()
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if not (event is InputEventKey) or not event.pressed or event.echo:
+		return
+	var k := (event as InputEventKey).keycode
+	if MED_KEYS.has(k):
+		_on_med_pressed(MED_KEYS[k])
+
+func _on_med_pressed(med_id: String) -> void:
+	if int(_last_charges.get(med_id, 0)) <= 0:
+		return
+	GameState.med_use_requested.emit(med_id)
 
 func _on_player_hp_changed(hp: int, max_hp: int) -> void:
 	player_hp_bar.max_value = max_hp
@@ -47,6 +86,29 @@ func _on_chronik_defeated(display_name: String, victory_text: String) -> void:
 func _on_continue_pressed() -> void:
 	victory_panel.visible = false
 	GameState.combat_resolved.emit()
+
+func _on_med_inventory_changed(charges: Dictionary) -> void:
+	_last_charges = charges.duplicate()
+	_refresh_med_buttons()
+
+func _refresh_med_buttons() -> void:
+	for med_id in med_btns:
+		var btn: Button = med_btns[med_id]
+		var n := int(_last_charges.get(med_id, 0))
+		btn.text = "%s\n[%d]" % [MED_LABELS[med_id], n]
+		btn.disabled = n <= 0
+
+func _on_buff_changed(speed_active: bool, force_active: bool) -> void:
+	var parts: Array[String] = []
+	if speed_active:
+		parts.append("Vitesse x2")
+	if force_active:
+		parts.append("Force x2")
+	if parts.is_empty():
+		buff_label.visible = false
+	else:
+		buff_label.text = " | ".join(parts)
+		buff_label.visible = true
 
 func _play_countdown() -> void:
 	countdown_label.visible = true

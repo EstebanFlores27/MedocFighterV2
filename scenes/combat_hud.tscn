@@ -128,13 +128,62 @@ size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 28
 text = "  Continuer  "
 
+[node name="MedBox" type="HBoxContainer" parent="Root"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -390.0
+offset_top = -160.0
+offset_right = 390.0
+offset_bottom = -40.0
+theme_override_constants/separation = 30
+
+[node name="SoinBtn" type="Button" parent="Root/MedBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(240, 110)
+theme_override_font_sizes/font_size = 22
+text = "Soin
++20 PV
+[1]"
+
+[node name="VitesseBtn" type="Button" parent="Root/MedBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(240, 110)
+theme_override_font_sizes/font_size = 22
+text = "Vitesse
+x2 vitesse
+[1]"
+
+[node name="ForceBtn" type="Button" parent="Root/MedBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(240, 110)
+theme_override_font_sizes/font_size = 22
+text = "Force
+x2 dégâts
+[1]"
+
+[node name="BuffLabel" type="Label" parent="Root"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = -160.0
+offset_right = 600.0
+offset_bottom = -120.0
+theme_override_font_sizes/font_size = 24
+text = ""
+
 [node name="Help" type="Label" parent="Root"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 40.0
-offset_top = -60.0
-offset_right = 1200.0
-offset_bottom = -20.0
-text = "◀ ▶ : se déplacer    ▲ / Espace : sauter    ▼ : se baisser    X : frapper"
+offset_top = -30.0
+offset_right = 1500.0
+offset_bottom = -6.0
+text = "◀ ▶ : se déplacer    ▲ / Espace : sauter    ▼ : se baisser    X : frapper    1/2/3 : utiliser un médoc"

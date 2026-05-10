@@ -11,6 +11,9 @@ signal chronik_hp_changed(hp: int, max_hp: int)
 signal chronik_defeated(display_name: String, victory_text: String)
 signal combat_countdown_done
 signal combat_resolved
+signal med_inventory_changed(charges: Dictionary)
+signal med_use_requested(med_id: String)
+signal player_buff_changed(speed_active: bool, force_active: bool)
 @warning_ignore_restore("unused_signal")
 
 var current_district: int = 1
