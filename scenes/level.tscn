@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/chronik.tscn" id="2_chronik"]
 [ext_resource type="PackedScene" path="res://scenes/combat_hud.tscn" id="3_hud"]
+[ext_resource type="PackedScene" path="res://scenes/touch_controls.tscn" id="4_touch"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_floor"]
 size = Vector2(4000, 100)
@@ -96,3 +97,5 @@ color = Color(0.95, 0.7, 0.55, 1)
 victory_text = "Tu as gardé ton bouclier naturel intact ! La peau est la première barrière de ton corps. Tu as évité une inflammation qui aurait pu causer des lésions profondes, des douleurs constantes ou des infections sévères."
 
 [node name="CombatHUD" parent="." instance=ExtResource("3_hud")]
+
+[node name="TouchControls" parent="." instance=ExtResource("4_touch")]

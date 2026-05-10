@@ -169,3 +169,23 @@ Working back from **F6.2 = 2026-05-26** (~16 days). Branch: `feature/julie`, one
 
 Risk items: combat feel with placeholder art (visual feedback may be unclear); touch joystick tuning on real device; 24h gate needs a mocked-clock debug switch for QA.
 
+## 13. Android export — manual setup
+
+The touch controls work on desktop with mouse for testing. To build an actual APK and install on a phone, this is a one-time setup we need to do once you have access to an Android device:
+
+1. Install **Android Studio** (or just the Android SDK + command-line tools).
+2. Install Java JDK 17 (required by recent Gradle).
+3. Generate a debug keystore (one command: `keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -dname "CN=Android Debug,O=Android,C=US" -keyalg RSA -keysize 2048 -validity 10000`).
+4. In Godot: **Editor → Editor Settings → Export → Android** — set the SDK path and the path to the `debug.keystore` from step 3.
+5. **Project → Export** → add an **Android** preset. Set:
+   - Unique name: `com.medocfighter.alpha`
+   - Min SDK / Target SDK: defaults are fine
+   - Texture format: leave defaults
+   - Screen orientation: `Landscape` (matches our project setting)
+6. Connect the Android phone via USB with developer mode + USB debugging enabled.
+7. Click **Export Project** (or the small Android icon in the editor's top bar to one-click deploy).
+
+The first export will take a few minutes (Godot pulls Gradle dependencies). Subsequent builds are fast.
+
+`export_presets.cfg` is intentionally **not committed** for now: it contains keystore paths that are local to whoever exports, and Godot regenerates it as soon as you add a preset.
+

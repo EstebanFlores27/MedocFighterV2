@@ -1,0 +1,99 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/virtual_joystick.gd" id="1_joy"]
+[ext_resource type="Script" path="res://scripts/action_button.gd" id="2_btn"]
+
+[node name="TouchControls" type="CanvasLayer"]
+layer = 5
+
+[node name="Joystick" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 100.0
+offset_top = -420.0
+offset_right = 420.0
+offset_bottom = -100.0
+modulate = Color(1, 1, 1, 0.7)
+script = ExtResource("1_joy")
+
+[node name="Base" type="Panel" parent="Joystick"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="BaseLabel" type="Label" parent="Joystick"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = -130.0
+offset_right = 120.0
+offset_bottom = -100.0
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+text = "Déplacement"
+
+[node name="Knob" type="Panel" parent="Joystick"]
+layout_mode = 0
+offset_left = 110.0
+offset_top = 110.0
+offset_right = 210.0
+offset_bottom = 210.0
+modulate = Color(1, 1, 1, 1.2)
+
+[node name="PunchBtn" type="Button" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -340.0
+offset_top = -340.0
+offset_right = -120.0
+offset_bottom = -120.0
+modulate = Color(1, 1, 1, 0.75)
+theme_override_font_sizes/font_size = 28
+text = "Frapper
+(X)"
+script = ExtResource("2_btn")
+action = "punch"
+
+[node name="JumpBtn" type="Button" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -560.0
+offset_top = -300.0
+offset_right = -380.0
+offset_bottom = -120.0
+modulate = Color(1, 1, 1, 0.75)
+theme_override_font_sizes/font_size = 22
+text = "Sauter
+(↑)"
+script = ExtResource("2_btn")
+action = "jump"
+
+[node name="DuckBtn" type="Button" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -300.0
+offset_top = -560.0
+offset_right = -120.0
+offset_bottom = -380.0
+modulate = Color(1, 1, 1, 0.75)
+theme_override_font_sizes/font_size = 22
+text = "Baisser
+(↓)"
+script = ExtResource("2_btn")
+action = "duck"
