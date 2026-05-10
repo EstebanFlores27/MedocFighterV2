@@ -51,6 +51,7 @@ func _ready() -> void:
 	GameState.chronik_defeated.connect(_on_chronik_defeated)
 	GameState.combat_resolved.connect(_on_combat_resolved)
 	GameState.med_use_requested.connect(_on_med_use_requested)
+	GameState.district_cleared.connect(_on_district_cleared)
 	GameState.player_hp_changed.emit(hp, MAX_HP)
 	GameState.med_inventory_changed.emit(med_charges.duplicate())
 	GameState.player_buff_changed.emit(false, false)
@@ -69,6 +70,12 @@ func _on_combat_resolved() -> void:
 
 func _on_med_use_requested(med_id: String) -> void:
 	use_med(med_id)
+
+func _on_district_cleared(_district: int) -> void:
+	GameState.has_adrenaline = true
+	heal(70)
+	med_charges = {"soin": 1, "vitesse": 1, "force": 1}
+	GameState.med_inventory_changed.emit(med_charges.duplicate())
 
 func use_med(med_id: String) -> void:
 	if not med_charges.has(med_id):

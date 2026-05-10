@@ -30,6 +30,7 @@ const MED_KEYS := {
 @onready var buff_label: Label = $Root/BuffLabel
 
 var _last_charges: Dictionary = {"soin": 1, "vitesse": 1, "force": 1}
+var _pending_district_cleared: int = 0
 
 func _ready() -> void:
 	chronik_panel.visible = false
@@ -42,6 +43,7 @@ func _ready() -> void:
 	GameState.chronik_defeated.connect(_on_chronik_defeated)
 	GameState.med_inventory_changed.connect(_on_med_inventory_changed)
 	GameState.player_buff_changed.connect(_on_buff_changed)
+	GameState.district_cleared.connect(_on_district_cleared)
 	continue_btn.pressed.connect(_on_continue_pressed)
 	for med_id in med_btns:
 		var btn: Button = med_btns[med_id]
@@ -84,8 +86,20 @@ func _on_chronik_defeated(display_name: String, victory_text: String) -> void:
 	continue_btn.grab_focus()
 
 func _on_continue_pressed() -> void:
+	if _pending_district_cleared > 0:
+		_show_district_cleared_panel(_pending_district_cleared)
+		_pending_district_cleared = 0
+		return
 	victory_panel.visible = false
 	GameState.combat_resolved.emit()
+
+func _on_district_cleared(district: int) -> void:
+	_pending_district_cleared = district
+
+func _show_district_cleared_panel(_district: int) -> void:
+	victory_title.text = "QUARTIER LIBÉRÉ !"
+	victory_body.text = "Adrénaline débloquée : +70 PV !\nLa boîte de médicaments est à nouveau pleine."
+	continue_btn.grab_focus()
 
 func _on_med_inventory_changed(charges: Dictionary) -> void:
 	_last_charges = charges.duplicate()

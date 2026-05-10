@@ -8,13 +8,16 @@ const STOP_DISTANCE := 90.0
 
 @export var chronik_id: String = "cortexia"
 @export var display_name: String = "Cortexia"
+@export var district_id: int = 1
 @export var max_hp: int = 60
 @export var contact_damage: int = 10
 @export var move_speed: float = 240.0
+@export var size_scale: float = 1.0
 @export var color: Color = Color(0.85, 0.45, 0.85)
 @export_multiline var victory_text: String = ""
 
 @onready var sprite: ColorRect = $Sprite
+@onready var collider: CollisionShape2D = $Collider
 @onready var detect_area: Area2D = $DetectArea
 @onready var contact_area: Area2D = $ContactArea
 
@@ -30,8 +33,23 @@ func _ready() -> void:
 	add_to_group("chronik")
 	hp = max_hp
 	sprite.color = color
+	if size_scale != 1.0:
+		_apply_size_scale()
 	detect_area.body_entered.connect(_on_player_detected)
 	GameState.combat_countdown_done.connect(_on_countdown_done)
+
+func _apply_size_scale() -> void:
+	sprite.size *= size_scale
+	sprite.position *= size_scale
+	var body_shape := (collider.shape as RectangleShape2D).duplicate() as RectangleShape2D
+	body_shape.size *= size_scale
+	collider.shape = body_shape
+	collider.position *= size_scale
+	var contact_shape_node: CollisionShape2D = contact_area.get_node("ContactShape")
+	var contact_rect := (contact_shape_node.shape as RectangleShape2D).duplicate() as RectangleShape2D
+	contact_rect.size *= size_scale
+	contact_shape_node.shape = contact_rect
+	contact_area.position *= size_scale
 
 func _on_player_detected(body: Node) -> void:
 	if engaged or hp <= 0:
@@ -61,6 +79,7 @@ func receive_punch(damage: int, from_dir: int) -> void:
 func _die() -> void:
 	active = false
 	GameState.chronik_defeated.emit(display_name, victory_text)
+	GameState.register_chronik_defeated(chronik_id, district_id)
 	contact_area.set_deferred("monitoring", false)
 	detect_area.set_deferred("monitoring", false)
 	var tween := create_tween()
