@@ -15,10 +15,17 @@ signal med_inventory_changed(charges: Dictionary)
 signal med_use_requested(med_id: String)
 signal player_buff_changed(speed_active: bool, force_active: bool)
 signal district_cleared(district: int)
+signal health_state_changed(state: int)
 @warning_ignore_restore("unused_signal")
 
 const DISTRICT_CHRONIK_COUNT := {1: 2, 2: 4, 3: 4, 4: 1}
 const SAVE_PATH := "user://save.cfg"
+const DAY_SECS := 86400
+const STATE_BLEAK := 0
+const STATE_PASTEL := 1
+const STATE_VIVID := 2
+const STREAK_PASTEL := 3
+const STREAK_VIVID := 12
 
 var current_district: int = 1
 var defeated_chroniks: Array[String] = []
@@ -26,6 +33,7 @@ var defeated_per_district: Dictionary = {1: 0, 2: 0, 3: 0, 4: 0}
 var streak_days: int = 0
 var has_adrenaline: bool = false
 var intro_seen: bool = false
+var last_boost_unix: int = 0
 
 func register_chronik_defeated(chronik_id: String, district: int) -> void:
 	if defeated_chroniks.has(chronik_id):
@@ -43,6 +51,59 @@ func reset_progress() -> void:
 	defeated_per_district = {1: 0, 2: 0, 3: 0, 4: 0}
 	has_adrenaline = false
 	intro_seen = false
+	streak_days = 0
+	last_boost_unix = 0
+	health_state_changed.emit(get_health_state())
+
+func get_health_state() -> int:
+	if streak_days >= STREAK_VIVID:
+		return STATE_VIVID
+	if streak_days >= STREAK_PASTEL:
+		return STATE_PASTEL
+	return STATE_BLEAK
+
+func get_damage_taken_multiplier() -> float:
+	match get_health_state():
+		STATE_VIVID: return 0.5
+		STATE_PASTEL: return 0.7
+		_: return 1.0
+
+func is_daily_boost_available() -> bool:
+	if last_boost_unix == 0:
+		return true
+	var now := int(Time.get_unix_time_from_system())
+	return now - last_boost_unix >= DAY_SECS
+
+func seconds_until_next_boost() -> int:
+	if last_boost_unix == 0:
+		return 0
+	var now := int(Time.get_unix_time_from_system())
+	return max(0, DAY_SECS - (now - last_boost_unix))
+
+func open_daily_boost() -> bool:
+	if not is_daily_boost_available():
+		return false
+	var now := int(Time.get_unix_time_from_system())
+	if last_boost_unix == 0:
+		streak_days = 1
+	elif now - last_boost_unix < DAY_SECS * 2:
+		streak_days += 1
+	else:
+		streak_days = 1
+	last_boost_unix = now
+	save_to_disk()
+	health_state_changed.emit(get_health_state())
+	return true
+
+func debug_advance_day() -> void:
+	# Dev-only: shifts the last-boost timestamp 24h into the past so the
+	# chest becomes available immediately. Used to verify the streak loop
+	# without waiting real time.
+	if last_boost_unix == 0:
+		last_boost_unix = int(Time.get_unix_time_from_system()) - DAY_SECS
+	else:
+		last_boost_unix -= DAY_SECS
+	save_to_disk()
 
 func has_save_file() -> bool:
 	return FileAccess.file_exists(SAVE_PATH)
@@ -54,7 +115,8 @@ func save_to_disk() -> void:
 	cfg.set_value("progress", "defeated_per_district", defeated_per_district)
 	cfg.set_value("progress", "has_adrenaline", has_adrenaline)
 	cfg.set_value("progress", "intro_seen", intro_seen)
-	cfg.set_value("progress", "streak_days", streak_days)
+	cfg.set_value("daily", "streak_days", streak_days)
+	cfg.set_value("daily", "last_boost_unix", last_boost_unix)
 	cfg.save(SAVE_PATH)
 
 func load_from_disk() -> bool:
@@ -72,7 +134,9 @@ func load_from_disk() -> bool:
 		defeated_per_district[int(k)] = int(loaded_counts[k])
 	has_adrenaline = bool(cfg.get_value("progress", "has_adrenaline", false))
 	intro_seen = bool(cfg.get_value("progress", "intro_seen", false))
-	streak_days = int(cfg.get_value("progress", "streak_days", 0))
+	streak_days = int(cfg.get_value("daily", "streak_days", cfg.get_value("progress", "streak_days", 0)))
+	last_boost_unix = int(cfg.get_value("daily", "last_boost_unix", 0))
+	health_state_changed.emit(get_health_state())
 	return true
 
 func clear_save() -> void:

@@ -52,6 +52,8 @@ func _ready() -> void:
 	GameState.combat_resolved.connect(_on_combat_resolved)
 	GameState.med_use_requested.connect(_on_med_use_requested)
 	GameState.district_cleared.connect(_on_district_cleared)
+	GameState.health_state_changed.connect(_on_health_state_changed)
+	_apply_health_tint(GameState.get_health_state())
 	GameState.player_hp_changed.emit(hp, MAX_HP)
 	GameState.med_inventory_changed.emit(med_charges.duplicate())
 	GameState.player_buff_changed.emit(false, false)
@@ -76,6 +78,18 @@ func _on_district_cleared(_district: int) -> void:
 	heal(70)
 	med_charges = {"soin": 1, "vitesse": 1, "force": 1}
 	GameState.med_inventory_changed.emit(med_charges.duplicate())
+
+func _on_health_state_changed(state: int) -> void:
+	_apply_health_tint(state)
+
+func _apply_health_tint(state: int) -> void:
+	match state:
+		GameState.STATE_VIVID:
+			sprite.color = Color(0.3, 0.45, 0.85)
+		GameState.STATE_PASTEL:
+			sprite.color = Color(0.5, 0.6, 0.78)
+		_:
+			sprite.color = Color(0.55, 0.55, 0.55)
 
 func use_med(med_id: String) -> void:
 	if not med_charges.has(med_id):
@@ -153,7 +167,8 @@ func _end_punch() -> void:
 func take_damage(amount: int, from_dir: int) -> void:
 	if _invuln_t > 0.0 or hp <= 0:
 		return
-	hp = max(0, hp - amount)
+	var modified := int(ceil(amount * GameState.get_damage_taken_multiplier()))
+	hp = max(0, hp - modified)
 	_invuln_t = INVULN_DURATION
 	velocity.x = from_dir * 350.0
 	velocity.y = -400.0

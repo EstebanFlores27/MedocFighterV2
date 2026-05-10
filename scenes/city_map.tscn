@@ -209,3 +209,60 @@ offset_bottom = -20.0
 theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1
 text = "Choisis un quartier disponible pour entrer."
+
+[node name="BoostPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -400.0
+offset_top = 90.0
+offset_right = -30.0
+offset_bottom = 360.0
+
+[node name="VBox" type="VBoxContainer" parent="BoostPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 14.0
+offset_right = -16.0
+offset_bottom = -14.0
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="BoostPanel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Coffre quotidien"
+
+[node name="StreakLabel" type="Label" parent="BoostPanel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Série : 0 jour"
+
+[node name="StateLabel" type="Label" parent="BoostPanel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "État : Noir et blanc (-0% dégâts)"
+
+[node name="StatusLabel" type="Label" parent="BoostPanel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Coffre disponible !"
+
+[node name="OpenBtn" type="Button" parent="BoostPanel/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 42)
+theme_override_font_sizes/font_size = 18
+text = "Ouvrir le coffre"
+
+[node name="DevBtn" type="Button" parent="BoostPanel/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 30)
+theme_override_font_sizes/font_size = 13
+text = "(dev) Avancer 24 h"
+
+[node name="CountdownTimer" type="Timer" parent="."]
+wait_time = 1.0
+autostart = false
