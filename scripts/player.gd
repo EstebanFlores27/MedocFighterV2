@@ -174,6 +174,7 @@ func take_damage(amount: int, from_dir: int) -> void:
 	velocity.y = -400.0
 	GameState.player_hp_changed.emit(hp, MAX_HP)
 	if hp == 0:
+		locked = true
 		GameState.player_defeated.emit()
 
 func heal(amount: int) -> void:

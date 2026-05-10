@@ -28,6 +28,9 @@ const MED_KEYS := {
 	"force": $Root/MedBox/ForceBtn as Button,
 }
 @onready var buff_label: Label = $Root/BuffLabel
+@onready var defeat_panel: Panel = $Root/DefeatPanel
+@onready var retry_btn: Button = $Root/DefeatPanel/VBox/Buttons/RetryBtn
+@onready var defeat_map_btn: Button = $Root/DefeatPanel/VBox/Buttons/MapBtn
 
 var _last_charges: Dictionary = {"soin": 1, "vitesse": 1, "force": 1}
 var _pending_district_cleared: int = 0
@@ -37,8 +40,10 @@ func _ready() -> void:
 	chronik_panel.visible = false
 	countdown_label.visible = false
 	victory_panel.visible = false
+	defeat_panel.visible = false
 	buff_label.visible = false
 	GameState.player_hp_changed.connect(_on_player_hp_changed)
+	GameState.player_defeated.connect(_on_player_defeated)
 	GameState.chronik_engaged.connect(_on_chronik_engaged)
 	GameState.chronik_hp_changed.connect(_on_chronik_hp_changed)
 	GameState.chronik_defeated.connect(_on_chronik_defeated)
@@ -46,6 +51,8 @@ func _ready() -> void:
 	GameState.player_buff_changed.connect(_on_buff_changed)
 	GameState.district_cleared.connect(_on_district_cleared)
 	continue_btn.pressed.connect(_on_continue_pressed)
+	retry_btn.pressed.connect(_on_retry_pressed)
+	defeat_map_btn.pressed.connect(_on_defeat_map_pressed)
 	for med_id in med_btns:
 		var btn: Button = med_btns[med_id]
 		btn.pressed.connect(_on_med_pressed.bind(med_id))
@@ -85,6 +92,19 @@ func _on_chronik_defeated(display_name: String, victory_text: String) -> void:
 	victory_body.text = "%s vaincu !\n\n%s" % [display_name, victory_text]
 	victory_panel.visible = true
 	continue_btn.grab_focus()
+
+func _on_player_defeated() -> void:
+	chronik_panel.visible = false
+	victory_panel.visible = false
+	countdown_label.visible = false
+	defeat_panel.visible = true
+	retry_btn.grab_focus()
+
+func _on_retry_pressed() -> void:
+	get_tree().reload_current_scene()
+
+func _on_defeat_map_pressed() -> void:
+	get_tree().change_scene_to_file("res://scenes/city_map.tscn")
 
 func _on_continue_pressed() -> void:
 	if _pending_district_cleared > 0:

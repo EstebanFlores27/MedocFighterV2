@@ -128,6 +128,60 @@ size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 28
 text = "  Continuer  "
 
+[node name="DefeatPanel" type="Panel" parent="Root"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -360.0
+offset_top = -200.0
+offset_right = 360.0
+offset_bottom = 200.0
+
+[node name="VBox" type="VBoxContainer" parent="Root/DefeatPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -24.0
+
+[node name="Title" type="Label" parent="Root/DefeatPanel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 56
+horizontal_alignment = 1
+text = "Tu es tombé"
+
+[node name="Body" type="Label" parent="Root/DefeatPanel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 22
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+text = "La maladie a pris le dessus pour cette fois.\nReprends ton souffle et réessaie — tes médicaments seront remis à neuf."
+
+[node name="Buttons" type="HBoxContainer" parent="Root/DefeatPanel/VBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 30
+
+[node name="RetryBtn" type="Button" parent="Root/DefeatPanel/VBox/Buttons"]
+layout_mode = 2
+custom_minimum_size = Vector2(200, 50)
+theme_override_font_sizes/font_size = 24
+text = "Réessayer"
+
+[node name="MapBtn" type="Button" parent="Root/DefeatPanel/VBox/Buttons"]
+layout_mode = 2
+custom_minimum_size = Vector2(200, 50)
+theme_override_font_sizes/font_size = 24
+text = "Retour à la carte"
+
 [node name="MedBox" type="HBoxContainer" parent="Root"]
 layout_mode = 1
 anchors_preset = 7

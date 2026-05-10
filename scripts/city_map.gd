@@ -51,6 +51,7 @@ func _ready() -> void:
 		enter_btn.pressed.connect(_on_district.bind(d))
 	boost_open_btn.pressed.connect(_on_boost_open)
 	boost_dev_btn.pressed.connect(_on_boost_dev_advance)
+	boost_dev_btn.visible = OS.is_debug_build()
 	countdown_timer.timeout.connect(_refresh_boost_panel)
 	countdown_timer.start()
 	_refresh_boost_panel()

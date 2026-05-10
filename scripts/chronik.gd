@@ -31,12 +31,22 @@ var _facing := -1
 
 func _ready() -> void:
 	add_to_group("chronik")
+	if chronik_id in GameState.defeated_chroniks:
+		process_mode = Node.PROCESS_MODE_DISABLED
+		hide()
+		call_deferred("queue_free")
+		return
 	hp = max_hp
 	sprite.color = color
 	if size_scale != 1.0:
 		_apply_size_scale()
 	detect_area.body_entered.connect(_on_player_detected)
 	GameState.combat_countdown_done.connect(_on_countdown_done)
+	GameState.player_defeated.connect(_on_player_defeated)
+
+func _on_player_defeated() -> void:
+	active = false
+	velocity.x = 0
 
 func _apply_size_scale() -> void:
 	sprite.size *= size_scale
