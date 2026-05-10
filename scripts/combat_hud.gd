@@ -31,6 +31,7 @@ const MED_KEYS := {
 
 var _last_charges: Dictionary = {"soin": 1, "vitesse": 1, "force": 1}
 var _pending_district_cleared: int = 0
+var _showing_district_panel: bool = false
 
 func _ready() -> void:
 	chronik_panel.visible = false
@@ -89,6 +90,12 @@ func _on_continue_pressed() -> void:
 	if _pending_district_cleared > 0:
 		_show_district_cleared_panel(_pending_district_cleared)
 		_pending_district_cleared = 0
+		_showing_district_panel = true
+		return
+	if _showing_district_panel:
+		_showing_district_panel = false
+		victory_panel.visible = false
+		get_tree().change_scene_to_file("res://scenes/city_map.tscn")
 		return
 	victory_panel.visible = false
 	GameState.combat_resolved.emit()

@@ -1,0 +1,91 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_menu"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_menu")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.08, 0.07, 0.16, 1)
+
+[node name="DomeAccent" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 0.0
+anchor_right = 0.5
+anchor_bottom = 0.0
+offset_left = -700.0
+offset_top = 80.0
+offset_right = 700.0
+offset_bottom = 200.0
+color = Color(0.35, 0.18, 0.55, 0.6)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(560, 0)
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="Title" type="Label" parent="CenterContainer/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 80
+horizontal_alignment = 1
+text = "MÉDOC FIGHTER"
+
+[node name="Subtitle" type="Label" parent="CenterContainer/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+horizontal_alignment = 1
+text = "Survis à Seek City — un combat à la fois"
+
+[node name="Spacer" type="Control" parent="CenterContainer/VBox"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+
+[node name="NewGameBtn" type="Button" parent="CenterContainer/VBox"]
+custom_minimum_size = Vector2(440, 64)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Nouvelle partie"
+
+[node name="ContinueBtn" type="Button" parent="CenterContainer/VBox"]
+custom_minimum_size = Vector2(440, 64)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+disabled = true
+text = "Continuer"
+
+[node name="QuitBtn" type="Button" parent="CenterContainer/VBox"]
+custom_minimum_size = Vector2(440, 64)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Quitter"
+
+[node name="Footer" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -300.0
+offset_top = -50.0
+offset_right = 300.0
+offset_bottom = -20.0
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1
+text = "Alpha — version de développement"

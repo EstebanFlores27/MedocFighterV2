@@ -33,3 +33,18 @@ func register_chronik_defeated(chronik_id: String, district: int) -> void:
 	var target := int(DISTRICT_CHRONIK_COUNT.get(district, 9999))
 	if int(defeated_per_district[district]) >= target:
 		district_cleared.emit(district)
+
+func reset_progress() -> void:
+	current_district = 1
+	defeated_chroniks.clear()
+	defeated_per_district = {1: 0, 2: 0, 3: 0, 4: 0}
+	has_adrenaline = false
+
+func is_district_cleared(d: int) -> bool:
+	var target := int(DISTRICT_CHRONIK_COUNT.get(d, 9999))
+	return int(defeated_per_district.get(d, 0)) >= target
+
+func is_district_unlocked(d: int) -> bool:
+	if d == 1:
+		return true
+	return is_district_cleared(d - 1)
