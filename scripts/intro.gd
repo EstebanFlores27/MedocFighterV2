@@ -18,6 +18,7 @@ const PAGES: Array[String] = [
 @onready var page_label: Label = $DialogPanel/Margin/VBox/NextRow/PageLabel
 @onready var next_btn: Button = $DialogPanel/Margin/VBox/NextRow/NextBtn
 @onready var skip_btn: Button = $TopBar/SkipBtn
+@onready var player_rect: ColorRect = $Player
 
 var _idx: int = 0
 var _is_typing: bool = false
@@ -26,6 +27,7 @@ var _text_tween: Tween
 func _ready() -> void:
 	next_btn.pressed.connect(_advance)
 	skip_btn.pressed.connect(_skip)
+	player_rect.color = Color(0.60, 0.45, 0.54) if GameState.player_gender == 1 else Color(0.42, 0.45, 0.60)
 	_show_page()
 	next_btn.grab_focus()
 

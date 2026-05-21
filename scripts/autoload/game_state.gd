@@ -34,6 +34,7 @@ var streak_days: int = 0
 var has_adrenaline: bool = false
 var intro_seen: bool = false
 var last_boost_unix: int = 0
+var player_gender: int = 0  # 0 = Homme, 1 = Femme
 
 func register_chronik_defeated(chronik_id: String, district: int) -> void:
 	if defeated_chroniks.has(chronik_id):
@@ -53,6 +54,7 @@ func reset_progress() -> void:
 	intro_seen = false
 	streak_days = 0
 	last_boost_unix = 0
+	player_gender = 0
 	health_state_changed.emit(get_health_state())
 
 func get_health_state() -> int:
@@ -115,6 +117,7 @@ func save_to_disk() -> void:
 	cfg.set_value("progress", "defeated_per_district", defeated_per_district)
 	cfg.set_value("progress", "has_adrenaline", has_adrenaline)
 	cfg.set_value("progress", "intro_seen", intro_seen)
+	cfg.set_value("progress", "player_gender", player_gender)
 	cfg.set_value("daily", "streak_days", streak_days)
 	cfg.set_value("daily", "last_boost_unix", last_boost_unix)
 	cfg.save(SAVE_PATH)
@@ -134,6 +137,7 @@ func load_from_disk() -> bool:
 		defeated_per_district[int(k)] = int(loaded_counts[k])
 	has_adrenaline = bool(cfg.get_value("progress", "has_adrenaline", false))
 	intro_seen = bool(cfg.get_value("progress", "intro_seen", false))
+	player_gender = int(cfg.get_value("progress", "player_gender", 0))
 	streak_days = int(cfg.get_value("daily", "streak_days", cfg.get_value("progress", "streak_days", 0)))
 	last_boost_unix = int(cfg.get_value("daily", "last_boost_unix", 0))
 	health_state_changed.emit(get_health_state())

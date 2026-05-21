@@ -1,0 +1,111 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/character_select.gd" id="1_cs"]
+[ext_resource type="Texture2D" path="res://assets/sprites/mascPerso.png" id="2_tex"]
+[ext_resource type="Texture2D" path="res://assets/sprites/Fem.png" id="3_tex"]
+
+[node name="CharacterSelect" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_cs")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.08, 0.07, 0.16, 1)
+
+[node name="DomeAccent" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 0.0
+anchor_right = 0.5
+anchor_bottom = 0.0
+offset_left = -700.0
+offset_top = 80.0
+offset_right = 700.0
+offset_bottom = 200.0
+color = Color(0.35, 0.18, 0.55, 0.6)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="Title" type="Label" parent="CenterContainer/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 60
+horizontal_alignment = 1
+text = "Choisissez votre personnage"
+
+[node name="Subtitle" type="Label" parent="CenterContainer/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+horizontal_alignment = 1
+text = "Votre apparence pendant le combat"
+
+[node name="Spacer" type="Control" parent="CenterContainer/VBox"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="HBox" type="HBoxContainer" parent="CenterContainer/VBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 80
+
+[node name="MaleCard" type="VBoxContainer" parent="CenterContainer/VBox/HBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="MaleImage" type="TextureRect" parent="CenterContainer/VBox/HBox/MaleCard"]
+custom_minimum_size = Vector2(200, 300)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("2_tex")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="MaleLabel" type="Label" parent="CenterContainer/VBox/HBox/MaleCard"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+text = "Homme"
+
+[node name="MaleBtn" type="Button" parent="CenterContainer/VBox/HBox/MaleCard"]
+custom_minimum_size = Vector2(200, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Choisir"
+
+[node name="FemaleCard" type="VBoxContainer" parent="CenterContainer/VBox/HBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="FemaleImage" type="TextureRect" parent="CenterContainer/VBox/HBox/FemaleCard"]
+custom_minimum_size = Vector2(200, 300)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("3_tex")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="FemaleLabel" type="Label" parent="CenterContainer/VBox/HBox/FemaleCard"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+text = "Femme"
+
+[node name="FemaleBtn" type="Button" parent="CenterContainer/VBox/HBox/FemaleCard"]
+custom_minimum_size = Vector2(200, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Choisir"

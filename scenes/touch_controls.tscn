@@ -11,10 +11,10 @@ layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 100.0
-offset_top = -420.0
-offset_right = 420.0
-offset_bottom = -100.0
+offset_left = 60.0
+offset_top = -280.0
+offset_right = 270.0
+offset_bottom = -70.0
 modulate = Color(1, 1, 1, 0.7)
 script = ExtResource("1_joy")
 
@@ -41,10 +41,10 @@ text = "Déplacement"
 
 [node name="Knob" type="Panel" parent="Joystick"]
 layout_mode = 0
-offset_left = 110.0
-offset_top = 110.0
-offset_right = 210.0
-offset_bottom = 210.0
+offset_left = 72.0
+offset_top = 72.0
+offset_right = 138.0
+offset_bottom = 138.0
 modulate = Color(1, 1, 1, 1.2)
 
 [node name="PunchBtn" type="Button" parent="."]
@@ -53,12 +53,12 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -340.0
-offset_top = -340.0
-offset_right = -120.0
-offset_bottom = -120.0
+offset_left = -260.0
+offset_top = -260.0
+offset_right = -80.0
+offset_bottom = -80.0
 modulate = Color(1, 1, 1, 0.75)
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 20
 text = "Frapper
 (X)"
 script = ExtResource("2_btn")
@@ -70,12 +70,12 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -560.0
-offset_top = -300.0
-offset_right = -380.0
-offset_bottom = -120.0
+offset_left = -420.0
+offset_top = -230.0
+offset_right = -275.0
+offset_bottom = -80.0
 modulate = Color(1, 1, 1, 0.75)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 17
 text = "Sauter
 (↑)"
 script = ExtResource("2_btn")
@@ -87,12 +87,12 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -300.0
-offset_top = -560.0
-offset_right = -120.0
-offset_bottom = -380.0
+offset_left = -230.0
+offset_top = -420.0
+offset_right = -80.0
+offset_bottom = -275.0
 modulate = Color(1, 1, 1, 0.75)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 17
 text = "Baisser
 (↓)"
 script = ExtResource("2_btn")

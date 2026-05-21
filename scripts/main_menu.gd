@@ -18,7 +18,7 @@ func _ready() -> void:
 func _on_new_game() -> void:
 	GameState.reset_progress()
 	GameState.clear_save()
-	get_tree().change_scene_to_file("res://scenes/intro.tscn")
+	get_tree().change_scene_to_file("res://scenes/character_select.tscn")
 
 func _on_continue() -> void:
 	if not GameState.load_from_disk():

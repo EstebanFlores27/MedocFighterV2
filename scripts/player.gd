@@ -11,7 +11,40 @@ const INVULN_DURATION := 0.6
 const SOIN_HEAL_AMOUNT := 20
 const BUFF_DURATION := 10.0
 
-@onready var sprite: ColorRect = $Sprite
+# Female sprite sheet (player_sheet.png) — regions + offset_y.
+# "idle" and "jump" share the same region (standing pose used for both).
+const POSES_FEMALE := {
+	"idle":    {"region": Rect2(300,   5, 335, 595), "oy": -63.7},
+	"jump":    {"region": Rect2(300,   5, 335, 595), "oy": -63.7},
+	"duck":    {"region": Rect2( 25, 170, 230, 405), "oy": -43.3},
+	"retreat": {"region": Rect2(  5, 575, 230, 445), "oy": -47.6},
+	"advance": {"region": Rect2(245, 570, 280, 450), "oy": -48.2},
+	"punch":   {"region": Rect2(520, 570, 500, 450), "oy": -48.2},
+}
+
+# Male individual sprites — one file per pose.
+const MALE_FILES := {
+	"idle":    "res://assets/sprites/Debout.png",
+	"advance": "res://assets/sprites/Marche.png",
+	"retreat": "res://assets/sprites/Marche.png",
+	"jump":    "res://assets/sprites/Saut.png",
+	"duck":    "res://assets/sprites/Baisser.png",
+	"punch":   "res://assets/sprites/Coup.png",
+}
+const MALE_OFFSETS := {
+	"idle":    -62.5,
+	"advance": -61.6,
+	"retreat": -61.6,
+	"jump":    -49.9,
+	"duck":    -54.8,
+	"punch":   -55.7,
+}
+
+var _is_male := false
+var _male_tex: Dictionary = {}
+var _poses: Dictionary        # used only for female
+
+@onready var sprite: Sprite2D = $Sprite
 @onready var collider: CollisionShape2D = $Collider
 @onready var punch_hitbox: Area2D = $PunchHitbox
 @onready var punch_visual: ColorRect = $PunchHitbox/PunchVisual
@@ -27,25 +60,34 @@ var _last_speed_active := false
 var _last_force_active := false
 
 var _is_ducking := false
-var _default_sprite_size: Vector2
-var _default_sprite_pos: Vector2
 var _default_collider_height: float
 var _default_collider_pos: Vector2
 var _default_punch_offset: float
 var _punch_cd := 0.0
 var _punch_t := 0.0
 var _invuln_t := 0.0
+var _base_color := Color.WHITE
 
 func _ready() -> void:
 	add_to_group("player")
-	_default_sprite_size = sprite.size
-	_default_sprite_pos = sprite.position
 	var shape := collider.shape as RectangleShape2D
 	_default_collider_height = shape.size.y
 	_default_collider_pos = collider.position
 	_default_punch_offset = abs(punch_hitbox.position.x)
 	punch_hitbox.monitoring = false
 	punch_visual.visible = false
+
+	if GameState.player_gender == 0:
+		_is_male = true
+		sprite.region_enabled = false
+		for pose in MALE_FILES:
+			_male_tex[pose] = load(MALE_FILES[pose]) as Texture2D
+		sprite.texture = _male_tex["idle"]
+		sprite.offset = Vector2(0.0, MALE_OFFSETS["idle"])
+	else:
+		_poses = POSES_FEMALE
+		sprite.texture = load("res://assets/sprites/player_sheet.png") as Texture2D
+
 	GameState.chronik_engaged.connect(_on_chronik_engaged)
 	GameState.combat_countdown_done.connect(_on_countdown_done)
 	GameState.chronik_defeated.connect(_on_chronik_defeated)
@@ -82,14 +124,12 @@ func _on_district_cleared(_district: int) -> void:
 func _on_health_state_changed(state: int) -> void:
 	_apply_health_tint(state)
 
-func _apply_health_tint(state: int) -> void:
-	match state:
-		GameState.STATE_VIVID:
-			sprite.color = Color(0.3, 0.45, 0.85)
-		GameState.STATE_PASTEL:
-			sprite.color = Color(0.5, 0.6, 0.78)
-		_:
-			sprite.color = Color(0.55, 0.55, 0.55)
+func _apply_health_tint(_state: int) -> void:
+	var is_female := GameState.player_gender == 1
+	var col_min := Color(0.60, 0.45, 0.54) if is_female else Color(0.42, 0.45, 0.60)
+	var col_max := Color(0.90, 0.30, 0.60) if is_female else Color(0.20, 0.40, 0.85)
+	var t := clampf(float(GameState.streak_days) / float(GameState.STREAK_VIVID), 0.0, 1.0)
+	_base_color = col_min.lerp(col_max, t)
 
 func use_med(med_id: String) -> void:
 	if not med_charges.has(med_id):
@@ -193,9 +233,42 @@ func _apply_visual_state() -> void:
 	var alpha := 1.0
 	if _invuln_t > 0.0:
 		alpha = 0.4 if int(_invuln_t * 20) % 2 == 0 else 1.0
-	var r := 1.4 if _force_buff_t > 0.0 else 1.0
-	var b := 1.4 if _speed_buff_t > 0.0 else 1.0
-	sprite.modulate = Color(r, 1.0, b, alpha)
+	var r := _base_color.r * (1.4 if _force_buff_t > 0.0 else 1.0)
+	var b := _base_color.b * (1.4 if _speed_buff_t > 0.0 else 1.0)
+	sprite.modulate = Color(r, _base_color.g, b, alpha)
+	_update_sprite_pose()
+
+func _update_sprite_pose() -> void:
+	var pose_name: String
+	var flip := false
+
+	if _is_ducking:
+		pose_name = "duck"
+		flip = facing < 0
+	elif _punch_t > 0.0:
+		pose_name = "punch"
+		flip = facing < 0
+	elif not is_on_floor():
+		pose_name = "jump"
+		flip = facing < 0
+	elif velocity.x > 0.0:
+		pose_name = "advance"
+	elif velocity.x < 0.0:
+		pose_name = "retreat"
+		flip = true
+	else:
+		pose_name = "idle"
+		flip = facing < 0
+
+	if _is_male:
+		sprite.texture = _male_tex[pose_name]
+		sprite.offset = Vector2(0.0, MALE_OFFSETS[pose_name])
+		sprite.flip_h = flip
+	else:
+		var p: Dictionary = _poses[pose_name]
+		sprite.region_rect = p["region"]
+		sprite.offset = Vector2(0.0, p["oy"])
+		sprite.flip_h = flip
 
 func _set_ducking(ducking: bool) -> void:
 	if ducking == _is_ducking:
@@ -203,12 +276,8 @@ func _set_ducking(ducking: bool) -> void:
 	_is_ducking = ducking
 	var shape := collider.shape as RectangleShape2D
 	if ducking:
-		sprite.size = Vector2(_default_sprite_size.x, _default_sprite_size.y * 0.5)
-		sprite.position = _default_sprite_pos + Vector2(0, _default_sprite_size.y * 0.5)
 		shape.size = Vector2(shape.size.x, _default_collider_height * 0.5)
 		collider.position = _default_collider_pos + Vector2(0, _default_collider_height * 0.25)
 	else:
-		sprite.size = _default_sprite_size
-		sprite.position = _default_sprite_pos
 		shape.size = Vector2(shape.size.x, _default_collider_height)
 		collider.position = _default_collider_pos

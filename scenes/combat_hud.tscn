@@ -182,39 +182,38 @@ custom_minimum_size = Vector2(200, 50)
 theme_override_font_sizes/font_size = 24
 text = "Retour à la carte"
 
-[node name="MedBox" type="HBoxContainer" parent="Root"]
+[node name="MedBox" type="VBoxContainer" parent="Root"]
 layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -390.0
-offset_top = -160.0
-offset_right = 390.0
-offset_bottom = -40.0
-theme_override_constants/separation = 30
+anchor_left = 0.0
+anchor_top = 0.5
+anchor_right = 0.0
+anchor_bottom = 0.5
+offset_left = 20.0
+offset_top = -128.0
+offset_right = 180.0
+offset_bottom = 128.0
+theme_override_constants/separation = 20
 
 [node name="SoinBtn" type="Button" parent="Root/MedBox"]
 layout_mode = 2
-custom_minimum_size = Vector2(240, 110)
-theme_override_font_sizes/font_size = 22
+custom_minimum_size = Vector2(160, 72)
+theme_override_font_sizes/font_size = 16
 text = "Soin
 +20 PV
 [1]"
 
 [node name="VitesseBtn" type="Button" parent="Root/MedBox"]
 layout_mode = 2
-custom_minimum_size = Vector2(240, 110)
-theme_override_font_sizes/font_size = 22
+custom_minimum_size = Vector2(160, 72)
+theme_override_font_sizes/font_size = 16
 text = "Vitesse
 x2 vitesse
 [1]"
 
 [node name="ForceBtn" type="Button" parent="Root/MedBox"]
 layout_mode = 2
-custom_minimum_size = Vector2(240, 110)
-theme_override_font_sizes/font_size = 22
+custom_minimum_size = Vector2(160, 72)
+theme_override_font_sizes/font_size = 16
 text = "Force
 x2 dégâts
 [1]"

@@ -21,7 +21,7 @@ const MED_KEYS := {
 @onready var victory_title: Label = $Root/VictoryPanel/VBox/Title
 @onready var victory_body: Label = $Root/VictoryPanel/VBox/Body
 @onready var continue_btn: Button = $Root/VictoryPanel/VBox/ContinueButton
-@onready var med_box: HBoxContainer = $Root/MedBox
+@onready var med_box: VBoxContainer = $Root/MedBox
 @onready var med_btns := {
 	"soin": $Root/MedBox/SoinBtn as Button,
 	"vitesse": $Root/MedBox/VitesseBtn as Button,
