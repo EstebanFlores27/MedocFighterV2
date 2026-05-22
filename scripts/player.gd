@@ -14,12 +14,12 @@ const BUFF_DURATION := 10.0
 # Female sprite sheet (player_sheet.png) — regions + offset_y.
 # "idle" and "jump" share the same region (standing pose used for both).
 const POSES_FEMALE := {
-	"idle":    {"region": Rect2(300,   5, 335, 595), "oy": -63.7},
-	"jump":    {"region": Rect2(300,   5, 335, 595), "oy": -63.7},
-	"duck":    {"region": Rect2( 25, 170, 230, 405), "oy": -43.3},
-	"retreat": {"region": Rect2(  5, 575, 230, 445), "oy": -47.6},
-	"advance": {"region": Rect2(245, 570, 280, 450), "oy": -48.2},
-	"punch":   {"region": Rect2(520, 570, 500, 450), "oy": -48.2},
+	"idle":    {"region": Rect2(300,   5, 335, 595), "oy": -191.1},
+	"jump":    {"region": Rect2(300,   5, 335, 595), "oy": -191.1},
+	"duck":    {"region": Rect2( 25, 170, 230, 405), "oy": -129.9},
+	"retreat": {"region": Rect2(  5, 575, 230, 445), "oy": -142.8},
+	"advance": {"region": Rect2(245, 570, 280, 450), "oy": -144.6},
+	"punch":   {"region": Rect2(520, 570, 500, 450), "oy": -144.6},
 }
 
 # Male individual sprites — one file per pose.
@@ -32,12 +32,12 @@ const MALE_FILES := {
 	"punch":   "res://assets/sprites/Coup.png",
 }
 const MALE_OFFSETS := {
-	"idle":    -62.5,
-	"advance": -61.6,
-	"retreat": -61.6,
-	"jump":    -49.9,
-	"duck":    -54.8,
-	"punch":   -55.7,
+	"idle":    -187.5,
+	"advance": -184.8,
+	"retreat": -184.8,
+	"jump":    -149.7,
+	"duck":    -164.4,
+	"punch":   -167.1,
 }
 
 var _is_male := false

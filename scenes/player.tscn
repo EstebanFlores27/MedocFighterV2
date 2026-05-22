@@ -3,28 +3,28 @@
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_player"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
-size = Vector2(64, 128)
+size = Vector2(192, 384)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_punch"]
-size = Vector2(80, 100)
+size = Vector2(240, 300)
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_player")
 
 [node name="Sprite" type="Sprite2D" parent="."]
 centered = true
-offset = Vector2(0, -64)
-scale = Vector2(0.215, 0.215)
+offset = Vector2(0, -192)
+scale = Vector2(0.645, 0.645)
 region_enabled = true
 region_rect = Rect2(300, 5, 335, 595)
 
 
 [node name="Collider" type="CollisionShape2D" parent="."]
-position = Vector2(0, -64)
+position = Vector2(0, -192)
 shape = SubResource("RectangleShape2D_player")
 
 [node name="PunchHitbox" type="Area2D" parent="."]
-position = Vector2(70, -64)
+position = Vector2(210, -192)
 collision_layer = 0
 collision_mask = 1
 monitoring = false
@@ -34,8 +34,8 @@ monitorable = false
 shape = SubResource("RectangleShape2D_punch")
 
 [node name="PunchVisual" type="ColorRect" parent="PunchHitbox"]
-offset_left = -40.0
-offset_top = -50.0
-offset_right = 40.0
-offset_bottom = 50.0
+offset_left = -120.0
+offset_top = -150.0
+offset_right = 120.0
+offset_bottom = 150.0
 color = Color(1, 0.9, 0.3, 0.55)
