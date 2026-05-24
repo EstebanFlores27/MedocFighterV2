@@ -3,9 +3,9 @@ extends Control
 const ACTIVATION_THRESHOLD := 0.3
 const DUCK_THRESHOLD := 0.5
 const JUMP_THRESHOLD := -0.5
-const KNOB_RADIUS := 100.0
+const KNOB_RADIUS := 60.0
 
-@onready var knob: Panel = $Knob
+@onready var knob: TextureRect = $Knob
 
 var _touch_index: int = -1
 var _last_jump: bool = false

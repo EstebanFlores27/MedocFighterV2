@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cjotsqffpf6j" path="res://scripts/intro.gd" id="1_intro"]
 [ext_resource type="Texture2D" uid="uid://003nvi88gr70" path="res://assets/dialogue/boiteDialogue.png" id="2_boite"]
+[ext_resource type="Texture2D" path="res://assets/sprites/background_menu.png" id="3_bg"]
 
 [node name="Intro" type="Control" unique_id=533558424]
 layout_mode = 3
@@ -20,6 +21,18 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.05, 0.05, 0.1, 1)
+
+[node name="BgImage" type="TextureRect" parent="." unique_id=298773412]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+modulate = Color(1, 1, 1, 0.3)
+texture = ExtResource("3_bg")
+expand_mode = 1
+stretch_mode = 6
 
 [node name="DomeOuter" type="ColorRect" parent="." unique_id=115875866]
 layout_mode = 1
