@@ -4,7 +4,7 @@ class_name Chronik
 const GRAVITY := 2200.0
 const ATTACK_COOLDOWN := 0.9
 const HIT_FLASH_DURATION := 0.3
-const STOP_DISTANCE := 90.0
+const STOP_DISTANCE := 148.0
 const WALK_FRAME_DURATION := 0.18
 const PUNCH_DISPLAY_DURATION := 0.35
 
@@ -204,10 +204,12 @@ func _check_contact_damage() -> void:
 		return
 	for body in contact_area.get_overlapping_bodies():
 		if body.is_in_group("player") and body.has_method("take_damage"):
-			body.take_damage(contact_damage, _facing)
 			_attack_cd = ATTACK_COOLDOWN
 			_punch_timer = PUNCH_DISPLAY_DURATION
 			velocity.x = -_facing * 200.0
+			if body.has_method("is_ducking") and body.is_ducking():
+				break  # attaque esquivée par l'accroupissement
+			body.take_damage(contact_damage, _facing)
 			break
 
 func _apply_hit_flash() -> void:

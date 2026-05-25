@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_player"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
-size = Vector2(192, 384)
+size = Vector2(216, 384)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_punch"]
 size = Vector2(240, 300)

@@ -13,7 +13,7 @@ signal combat_countdown_done
 signal combat_resolved
 signal med_inventory_changed(charges: Dictionary)
 signal med_use_requested(med_id: String)
-signal player_buff_changed(speed_active: bool, force_active: bool)
+signal player_buff_changed(speed_active: bool, force_active: bool, speed_t: float, force_t: float)
 signal district_cleared(district: int)
 signal health_state_changed(state: int)
 @warning_ignore_restore("unused_signal")
@@ -35,6 +35,7 @@ var has_adrenaline: bool = false
 var intro_seen: bool = false
 var last_boost_unix: int = 0
 var player_gender: int = 0  # 0 = Homme, 1 = Femme
+var med_charges: Dictionary = {"soin": 1, "vitesse": 1, "force": 1}
 
 func register_chronik_defeated(chronik_id: String, district: int) -> void:
 	if defeated_chroniks.has(chronik_id):
@@ -55,6 +56,7 @@ func reset_progress() -> void:
 	streak_days = 0
 	last_boost_unix = 0
 	player_gender = 0
+	med_charges = {"soin": 1, "vitesse": 1, "force": 1}
 	health_state_changed.emit(get_health_state())
 
 func get_health_state() -> int:

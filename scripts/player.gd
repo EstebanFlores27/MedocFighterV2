@@ -53,7 +53,7 @@ var hp: int = MAX_HP
 var facing: int = 1
 var locked: bool = false
 
-var med_charges: Dictionary = {"soin": 1, "vitesse": 1, "force": 1}
+var med_charges: Dictionary = {}
 var _speed_buff_t := 0.0
 var _force_buff_t := 0.0
 var _last_speed_active := false
@@ -70,6 +70,7 @@ var _base_color := Color.WHITE
 
 func _ready() -> void:
 	add_to_group("player")
+	med_charges = GameState.med_charges.duplicate()
 	var shape := collider.shape as RectangleShape2D
 	_default_collider_height = shape.size.y
 	_default_collider_pos = collider.position
@@ -98,7 +99,7 @@ func _ready() -> void:
 	_apply_health_tint(GameState.get_health_state())
 	GameState.player_hp_changed.emit(hp, MAX_HP)
 	GameState.med_inventory_changed.emit(med_charges.duplicate())
-	GameState.player_buff_changed.emit(false, false)
+	GameState.player_buff_changed.emit(false, false, 0.0, 0.0)
 
 func _on_chronik_engaged(_display_name: String, _max_hp: int) -> void:
 	locked = true
@@ -119,6 +120,7 @@ func _on_district_cleared(_district: int) -> void:
 	GameState.has_adrenaline = true
 	heal(70)
 	med_charges = {"soin": 1, "vitesse": 1, "force": 1}
+	GameState.med_charges = med_charges.duplicate()
 	GameState.med_inventory_changed.emit(med_charges.duplicate())
 
 func _on_health_state_changed(state: int) -> void:
@@ -145,6 +147,7 @@ func use_med(med_id: String) -> void:
 			_speed_buff_t = BUFF_DURATION
 		"force":
 			_force_buff_t = BUFF_DURATION
+	GameState.med_charges = med_charges.duplicate()
 	GameState.med_inventory_changed.emit(med_charges.duplicate())
 
 func _physics_process(delta: float) -> void:
@@ -184,6 +187,7 @@ func _physics_process(delta: float) -> void:
 		_start_punch()
 
 	move_and_slide()
+	_push_out_from_enemies()
 	_apply_visual_state()
 
 func _start_punch() -> void:
@@ -222,10 +226,11 @@ func heal(amount: int) -> void:
 func _emit_buff_change_if_needed() -> void:
 	var s_active := _speed_buff_t > 0.0
 	var f_active := _force_buff_t > 0.0
-	if s_active != _last_speed_active or f_active != _last_force_active:
+	var state_changed := s_active != _last_speed_active or f_active != _last_force_active
+	if state_changed or s_active or f_active:
 		_last_speed_active = s_active
 		_last_force_active = f_active
-		GameState.player_buff_changed.emit(s_active, f_active)
+		GameState.player_buff_changed.emit(s_active, f_active, _speed_buff_t, _force_buff_t)
 
 func _apply_visual_state() -> void:
 	var alpha := 1.0
@@ -267,6 +272,24 @@ func _update_sprite_pose() -> void:
 		sprite.region_rect = p["region"]
 		sprite.offset = Vector2(0.0, p["oy"])
 		sprite.flip_h = flip
+
+func _push_out_from_enemies() -> void:
+	const MIN_DIST := 152.0  # demi-largeur joueur (108) + demi-largeur ennemi (40) + marge
+	for node in get_tree().get_nodes_in_group("chronik"):
+		var enemy := node as Node2D
+		if enemy == null or not is_instance_valid(enemy) or not enemy.is_inside_tree():
+			continue
+		if absf(global_position.y - enemy.global_position.y) > 300.0:
+			continue
+		var dx := global_position.x - enemy.global_position.x
+		if absf(dx) < MIN_DIST:
+			var sep_dir := 1.0 if dx >= 0.0 else -1.0
+			global_position.x += sep_dir * (MIN_DIST - absf(dx))
+			if velocity.x * sep_dir < 0.0:
+				velocity.x = 0.0
+
+func is_ducking() -> bool:
+	return _is_ducking
 
 func _set_ducking(ducking: bool) -> void:
 	if ducking == _is_ducking:

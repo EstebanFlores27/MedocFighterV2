@@ -139,16 +139,16 @@ func _refresh_med_buttons() -> void:
 		btn.text = "%s\n[%d]" % [MED_LABELS[med_id], n]
 		btn.disabled = n <= 0
 
-func _on_buff_changed(speed_active: bool, force_active: bool) -> void:
+func _on_buff_changed(speed_active: bool, force_active: bool, speed_t: float, force_t: float) -> void:
 	var parts: Array[String] = []
 	if speed_active:
-		parts.append("Vitesse x2")
+		parts.append("Vitesse x2  %.1fs" % speed_t)
 	if force_active:
-		parts.append("Force x2")
+		parts.append("Force x2  %.1fs" % force_t)
 	if parts.is_empty():
 		buff_label.visible = false
 	else:
-		buff_label.text = " | ".join(parts)
+		buff_label.text = "\n".join(parts)
 		buff_label.visible = true
 
 func _play_countdown() -> void:
