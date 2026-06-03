@@ -26,7 +26,7 @@ shape = SubResource("RectangleShape2D_player")
 [node name="PunchHitbox" type="Area2D" parent="."]
 position = Vector2(210, -192)
 collision_layer = 0
-collision_mask = 1
+collision_mask = 3
 monitoring = false
 monitorable = false
 

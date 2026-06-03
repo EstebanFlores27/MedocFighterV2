@@ -91,8 +91,9 @@ victory_text = "Tu as gard√© ton bouclier naturel intact ! La peau est la premi√
 layer = 10
 
 [node name="HomeButton" type="TextureButton" parent="HomeLayer"]
-offset_left = 20.0
-offset_top = 20.0
+offset_left = 40.0
+offset_top = 140.0
 offset_right = 120.0
-offset_bottom = 120.0
-stretch_mode = 1
+offset_bottom = 220.0
+ignore_texture_size = true
+stretch_mode = 5

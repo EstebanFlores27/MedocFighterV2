@@ -22,26 +22,66 @@ const POSES_FEMALE := {
 	"punch":   {"region": Rect2(520, 570, 500, 450), "oy": -144.6},
 }
 
-# Male individual sprites — one file per pose.
-const MALE_FILES := {
-	"idle":    "res://assets/sprites/Debout.png",
-	"advance": "res://assets/sprites/Marche.png",
-	"retreat": "res://assets/sprites/Marche.png",
-	"jump":    "res://assets/sprites/Saut.png",
-	"duck":    "res://assets/sprites/Baisser.png",
-	"punch":   "res://assets/sprites/Coup.png",
+# Male individual sprites — one file per pose, declined in 3 health states.
+# The art itself carries the health look (sante = top form, malade = mid,
+# gris = worst), so no colour tint is applied for the male.
+# Sprites are 256x256, character facing right, feet near the bottom.
+const MALE_SCALE := 1.85
+# The visual floor sits ~78 px below the physics-node origin (enemies draw their
+# feet that far down to land on it). We anchor the player's feet there too.
+const MALE_FLOOR_DROP := 78.0
+const WALK_FRAME_TIME := 0.12  # seconds per walk frame
+# health_state (GameState) -> sprite suffix.
+const MALE_STATE_NAMES := {2: "sante", 1: "malade", 0: "gris"}
+
+# Each entry: "feet" = y of the feet in the 256px canvas (used to drop the feet
+# onto the floor), "scale" = per-pose size correction (default 1.0). The _sante
+# art is drawn at uneven zoom levels across poses, so its walk/jump/crouch/punch
+# frames get a scale < 1 to match the idle size. The on-screen scale and the
+# vertical offset are derived from these in _male_frame_transform().
+const MALE_POSES := {
+	"sante": {
+		"idle":  {"file": "res://assets/homme/combat_sante.png", "feet": 211},
+		"jump":  {"file": "res://assets/homme/jump_sante.png",   "feet": 196, "scale": 0.63},
+		"duck":  {"file": "res://assets/homme/crouch_sante.png", "feet": 195, "scale": 0.65},
+		"punch": {"file": "res://assets/homme/punch_sante.png",  "feet": 213, "scale": 0.92},
+	},
+	"malade": {
+		"idle":  {"file": "res://assets/homme/fightneutral_malade.png", "feet": 210},
+		"jump":  {"file": "res://assets/homme/jump_malade.png",   "feet": 190},
+		"duck":  {"file": "res://assets/homme/crouch_malade.png", "feet": 205},
+		"punch": {"file": "res://assets/homme/punch_malade.png",  "feet": 202},
+	},
+	"gris": {
+		"idle":  {"file": "res://assets/homme/fullbody_gris.png", "feet": 232},
+		"jump":  {"file": "res://assets/homme/jump_gris.png",     "feet": 197},
+		"duck":  {"file": "res://assets/homme/crouch_gris.png",   "feet": 198},
+		"punch": {"file": "res://assets/homme/punch_gris.png",    "feet": 221},
+	},
 }
-const MALE_OFFSETS := {
-	"idle":    -187.5,
-	"advance": -184.8,
-	"retreat": -184.8,
-	"jump":    -149.7,
-	"duck":    -164.4,
-	"punch":   -167.1,
+
+# Walk cycle frames per state (used for advance/retreat). Cycled over time.
+const MALE_WALK := {
+	"sante": [
+		{"file": "res://assets/homme/walk1_sante.png", "feet": 235, "scale": 0.71},
+		{"file": "res://assets/homme/walk2_sante.png", "feet": 240, "scale": 0.73},
+		{"file": "res://assets/homme/walk3_sante.png", "feet": 240, "scale": 0.68},
+	],
+	"malade": [
+		{"file": "res://assets/homme/walk1_malade.png", "feet": 208},
+		{"file": "res://assets/homme/walk2_malade.png", "feet": 218},
+	],
+	"gris": [
+		{"file": "res://assets/homme/walk1_gris.png", "feet": 224},
+		{"file": "res://assets/homme/walk2_gris.png", "feet": 224},
+	],
 }
 
 var _is_male := false
-var _male_tex: Dictionary = {}
+var _male_tex: Dictionary = {}        # state_name -> { pose -> Texture2D }
+var _male_walk_tex: Dictionary = {}   # state_name -> [ Texture2D, ... ]
+var _health_state := GameState.STATE_BLEAK
+var _walk_t := 0.0
 var _poses: Dictionary        # used only for female
 
 @onready var sprite: Sprite2D = $Sprite
@@ -81,10 +121,18 @@ func _ready() -> void:
 	if GameState.player_gender == 0:
 		_is_male = true
 		sprite.region_enabled = false
-		for pose in MALE_FILES:
-			_male_tex[pose] = load(MALE_FILES[pose]) as Texture2D
-		sprite.texture = _male_tex["idle"]
-		sprite.offset = Vector2(0.0, MALE_OFFSETS["idle"])
+		for state_name in MALE_POSES:
+			var by_pose := {}
+			for pose in MALE_POSES[state_name]:
+				by_pose[pose] = load(MALE_POSES[state_name][pose]["file"]) as Texture2D
+			_male_tex[state_name] = by_pose
+			var frames: Array = []
+			for f in MALE_WALK[state_name]:
+				frames.append(load(f["file"]) as Texture2D)
+			_male_walk_tex[state_name] = frames
+		_health_state = GameState.get_health_state()
+		sprite.texture = _male_tex[_male_state_name()]["idle"]
+		_apply_male_transform(MALE_POSES[_male_state_name()]["idle"])
 	else:
 		_poses = POSES_FEMALE
 		sprite.texture = load("res://assets/sprites/player_sheet.png") as Texture2D
@@ -124,9 +172,27 @@ func _on_district_cleared(_district: int) -> void:
 	GameState.med_inventory_changed.emit(med_charges.duplicate())
 
 func _on_health_state_changed(state: int) -> void:
+	_health_state = state
 	_apply_health_tint(state)
 
+func _male_state_name() -> String:
+	return MALE_STATE_NAMES.get(_health_state, "gris")
+
+# Applies the per-pose scale and the vertical offset that drops the feet onto
+# the visual floor. offset is in pre-scale local space, so the floor drop is
+# divided by the total scale.
+func _apply_male_transform(entry: Dictionary) -> void:
+	var ps: float = entry.get("scale", 1.0)
+	var st := MALE_SCALE * ps
+	sprite.scale = Vector2(st, st)
+	sprite.offset = Vector2(0.0, (128.0 - float(entry["feet"])) + MALE_FLOOR_DROP / st)
+
 func _apply_health_tint(_state: int) -> void:
+	# The male art already conveys the health state, so keep it untinted
+	# (buffs in _apply_visual_state still tint it slightly).
+	if _is_male:
+		_base_color = Color.WHITE
+		return
 	var is_female := GameState.player_gender == 1
 	var col_min := Color(0.60, 0.45, 0.54) if is_female else Color(0.42, 0.45, 0.60)
 	var col_max := Color(0.90, 0.30, 0.60) if is_female else Color(0.20, 0.40, 0.85)
@@ -159,6 +225,9 @@ func _physics_process(delta: float) -> void:
 	_speed_buff_t = max(0.0, _speed_buff_t - delta)
 	_force_buff_t = max(0.0, _force_buff_t - delta)
 	_emit_buff_change_if_needed()
+
+	var walking := absf(velocity.x) > 1.0 and is_on_floor() and not _is_ducking and not locked
+	_walk_t = _walk_t + delta if walking else 0.0
 
 	if _punch_t > 0.0:
 		_punch_t = max(0.0, _punch_t - delta)
@@ -264,8 +333,15 @@ func _update_sprite_pose() -> void:
 		flip = facing < 0
 
 	if _is_male:
-		sprite.texture = _male_tex[pose_name]
-		sprite.offset = Vector2(0.0, MALE_OFFSETS[pose_name])
+		var state_name := _male_state_name()
+		if pose_name == "advance" or pose_name == "retreat":
+			var frames: Array = _male_walk_tex[state_name]
+			var idx := int(_walk_t / WALK_FRAME_TIME) % frames.size()
+			sprite.texture = frames[idx]
+			_apply_male_transform(MALE_WALK[state_name][idx])
+		else:
+			sprite.texture = _male_tex[state_name][pose_name]
+			_apply_male_transform(MALE_POSES[state_name][pose_name])
 		sprite.flip_h = flip
 	else:
 		var p: Dictionary = _poses[pose_name]

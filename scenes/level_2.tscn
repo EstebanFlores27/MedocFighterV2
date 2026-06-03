@@ -1,0 +1,130 @@
+[gd_scene format=3 uid="uid://cl2vmd2x2lvl2"]
+
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="1_player"]
+[ext_resource type="PackedScene" path="res://scenes/chronik.tscn" id="2_chronik"]
+[ext_resource type="PackedScene" path="res://scenes/combat_hud.tscn" id="3_hud"]
+[ext_resource type="PackedScene" path="res://scenes/touch_controls.tscn" id="4_touch"]
+[ext_resource type="Texture2D" uid="uid://debcai6sesaf" path="res://assets/background/placeCentrale.jpeg" id="5_placeCentrale"]
+[ext_resource type="Script" path="res://scripts/level.gd" id="6_level"]
+[ext_resource type="Texture2D" uid="uid://b1daqh51exoi2" path="res://assets/background/commerce.png" id="7_commerce"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_floor"]
+size = Vector2(4000, 100)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall"]
+size = Vector2(50, 1200)
+
+[node name="Level" type="Node2D"]
+script = ExtResource("6_level")
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.5, 1)
+motion_mirroring = Vector2(8000, 0)
+
+[node name="Commerce" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2(-4000, -925)
+scale = Vector2(2.7807, 2.7807)
+texture = ExtResource("7_commerce")
+centered = false
+
+[node name="Floor" type="StaticBody2D" parent="."]
+
+[node name="FloorVisual" type="Sprite2D" parent="Floor"]
+visible = false
+position = Vector2(-4000, 0)
+scale = Vector2(5, 8)
+texture = ExtResource("5_placeCentrale")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 170, 1600, 39)
+
+[node name="FloorCollider" type="CollisionShape2D" parent="Floor"]
+position = Vector2(0, 50)
+shape = SubResource("RectangleShape2D_floor")
+
+[node name="WallLeft" type="StaticBody2D" parent="."]
+position = Vector2(-1975, -600)
+
+[node name="WallLCollider" type="CollisionShape2D" parent="WallLeft"]
+shape = SubResource("RectangleShape2D_wall")
+
+[node name="WallRight" type="StaticBody2D" parent="."]
+position = Vector2(1975, -600)
+
+[node name="WallRCollider" type="CollisionShape2D" parent="WallRight"]
+shape = SubResource("RectangleShape2D_wall")
+
+[node name="Player" parent="." instance=ExtResource("1_player")]
+position = Vector2(-1700, -100)
+
+[node name="Camera" type="Camera2D" parent="Player"]
+position = Vector2(0, -200)
+zoom = Vector2(1.1, 1.1)
+limit_left = -2000
+limit_top = -1200
+limit_right = 2000
+limit_bottom = 100
+position_smoothing_enabled = true
+position_smoothing_speed = 15.0
+
+[node name="Pancreok" parent="." instance=ExtResource("2_chronik")]
+position = Vector2(-500, -100)
+chronik_id = "pancreok"
+display_name = "Pancréok"
+district_id = 2
+max_hp = 80
+contact_damage = 12
+move_speed = 230.0
+color = Color(0.95, 0.85, 0.35, 1)
+victory_text = "Tu as protégé ton pancréas ! La régulation du sucre dans ton sang reste stable. Tu évites les risques de diabète et de pics de glycémie."
+
+[node name="Hepatox" parent="." instance=ExtResource("2_chronik")]
+position = Vector2(200, -100)
+chronik_id = "hepatox"
+display_name = "Hépatox"
+district_id = 2
+max_hp = 95
+contact_damage = 13
+move_speed = 220.0
+color = Color(0.55, 0.35, 0.20, 1)
+victory_text = "Tu as épargné ton foie ! Cet organe continue de filtrer les toxines de ton corps. Tu évites ainsi une fatigue chronique et des troubles digestifs sévères."
+
+[node name="Gastrix" parent="." instance=ExtResource("2_chronik")]
+position = Vector2(900, -100)
+chronik_id = "gastrix"
+display_name = "Gastrix"
+district_id = 2
+max_hp = 90
+contact_damage = 13
+move_speed = 240.0
+color = Color(0.85, 0.45, 0.45, 1)
+victory_text = "Tu as soulagé ton estomac ! La digestion se fait sans douleurs ni brûlures. Tu évites les ulcères et les remontées acides qui détériorent l'œsophage."
+
+[node name="Nefronix" parent="." instance=ExtResource("2_chronik")]
+position = Vector2(1600, -100)
+chronik_id = "nefronix"
+display_name = "Nefronix"
+district_id = 2
+max_hp = 130
+contact_damage = 16
+move_speed = 215.0
+size_scale = 1.3
+color = Color(0.45, 0.65, 0.85, 1)
+victory_text = "Tu as préservé tes reins ! Ils continuent d'éliminer les déchets de ton sang. Tu évites les insuffisances rénales qui peuvent imposer une dialyse à vie."
+
+[node name="CombatHUD" parent="." instance=ExtResource("3_hud")]
+
+[node name="TouchControls" parent="." instance=ExtResource("4_touch")]
+
+[node name="HomeLayer" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="HomeButton" type="TextureButton" parent="HomeLayer"]
+offset_left = 40.0
+offset_top = 140.0
+offset_right = 120.0
+offset_bottom = 220.0
+ignore_texture_size = true
+stretch_mode = 5

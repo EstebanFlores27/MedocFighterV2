@@ -220,14 +220,15 @@ x2 dégâts
 
 [node name="BuffLabel" type="Label" parent="Root"]
 layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 40.0
-offset_top = -160.0
-offset_right = 600.0
-offset_bottom = -120.0
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -380.0
+offset_top = 40.0
+offset_right = -40.0
+offset_bottom = 140.0
 theme_override_font_sizes/font_size = 24
+horizontal_alignment = 2
 text = ""
 
 [node name="Help" type="Label" parent="Root"]

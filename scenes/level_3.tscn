@@ -1,0 +1,87 @@
+[gd_scene format=3 uid="uid://cl2vmd2x2lvl3"]
+
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="1_player"]
+[ext_resource type="PackedScene" path="res://scenes/chronik.tscn" id="2_chronik"]
+[ext_resource type="PackedScene" path="res://scenes/combat_hud.tscn" id="3_hud"]
+[ext_resource type="PackedScene" path="res://scenes/touch_controls.tscn" id="4_touch"]
+[ext_resource type="Script" path="res://scripts/level.gd" id="6_level"]
+[ext_resource type="Texture2D" uid="uid://cv3a0ybdner8q" path="res://assets/background/hopital.png" id="7_hopital"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_floor"]
+size = Vector2(4000, 100)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall"]
+size = Vector2(50, 1200)
+
+[node name="Level" type="Node2D"]
+script = ExtResource("6_level")
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.5, 1)
+motion_mirroring = Vector2(8448, 0)
+
+[node name="Hopital" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2(-4000, -990)
+scale = Vector2(3, 3)
+texture = ExtResource("7_hopital")
+centered = false
+
+[node name="Floor" type="StaticBody2D" parent="."]
+
+[node name="FloorCollider" type="CollisionShape2D" parent="Floor"]
+position = Vector2(0, 50)
+shape = SubResource("RectangleShape2D_floor")
+
+[node name="WallLeft" type="StaticBody2D" parent="."]
+position = Vector2(-1975, -600)
+
+[node name="WallLCollider" type="CollisionShape2D" parent="WallLeft"]
+shape = SubResource("RectangleShape2D_wall")
+
+[node name="WallRight" type="StaticBody2D" parent="."]
+position = Vector2(1975, -600)
+
+[node name="WallRCollider" type="CollisionShape2D" parent="WallRight"]
+shape = SubResource("RectangleShape2D_wall")
+
+[node name="Player" parent="." instance=ExtResource("1_player")]
+position = Vector2(-1700, -100)
+
+[node name="Camera" type="Camera2D" parent="Player"]
+position = Vector2(0, -200)
+zoom = Vector2(1.1, 1.1)
+limit_left = -2000
+limit_top = -1200
+limit_right = 2000
+limit_bottom = 100
+position_smoothing_enabled = true
+position_smoothing_speed = 15.0
+
+[node name="BossFinal" parent="." instance=ExtResource("2_chronik")]
+position = Vector2(1750, -100)
+chronik_id = "boss_final"
+display_name = "Boss final"
+district_id = 3
+max_hp = 220
+contact_damage = 20
+move_speed = 200.0
+size_scale = 2.25
+color = Color(0.8, 0.15, 0.15, 1)
+victory_text = "Tu as vaincu le Boss final ! En prenant soin de ton corps jour après jour, tu as repris le contrôle sur ta maladie chronique. La ville retrouve ses couleurs."
+
+[node name="CombatHUD" parent="." instance=ExtResource("3_hud")]
+
+[node name="TouchControls" parent="." instance=ExtResource("4_touch")]
+
+[node name="HomeLayer" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="HomeButton" type="TextureButton" parent="HomeLayer"]
+offset_left = 40.0
+offset_top = 140.0
+offset_right = 120.0
+offset_bottom = 220.0
+ignore_texture_size = true
+stretch_mode = 5

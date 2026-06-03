@@ -7,6 +7,8 @@ const HIT_FLASH_DURATION := 0.3
 const STOP_DISTANCE := 148.0
 const WALK_FRAME_DURATION := 0.18
 const PUNCH_DISPLAY_DURATION := 0.35
+const CROUCH_DISPLAY_DURATION := 0.35
+const CROUCH_SCALE := 0.8  # le sprite accroupi est un peu plus petit
 
 @export var chronik_id: String = "cortexia"
 @export var display_name: String = "Cortexia"
@@ -41,9 +43,13 @@ var _tex_walk1: Texture2D
 var _tex_walk2: Texture2D
 var _tex_jump: Texture2D
 var _tex_punch: Texture2D
+var _tex_crouch: Texture2D
+var _has_crouch := false
+var _base_char_scale := Vector2.ONE
 var _walk_timer := 0.0
 var _walk_frame := 0
 var _punch_timer := 0.0
+var _crouch_timer := 0.0
 
 func _ready() -> void:
 	add_to_group("chronik")
@@ -79,9 +85,68 @@ func _load_sprites() -> void:
 			_tex_walk2         = load("res://assets/spritesEnnemi2/walk2.png")
 			_tex_jump          = load("res://assets/spritesEnnemi2/jump.png")
 			_tex_punch         = load("res://assets/spritesEnnemi2/punch.png")
+		"pancreok":
+			_tex_fullbody      = load("res://assets/pancreas/fullbody.png")
+			_tex_fight_neutral = load("res://assets/pancreas/fightneutral.png")
+			_tex_walk1         = load("res://assets/pancreas/walk1.png")
+			_tex_walk2         = load("res://assets/pancreas/walk2.png")
+			_tex_jump          = load("res://assets/pancreas/jump.png")
+			_tex_punch         = load("res://assets/pancreas/punch.png")
+			_tex_crouch        = load("res://assets/pancreas/crouch.png")
+			_has_crouch = true
+			# Corps sur la couche 2 : le joueur (masque 1) ne peut plus se poser dessus.
+			collision_layer = 2
+		"hepatox":
+			_tex_fullbody      = load("res://assets/hepatox/fullbody.png")
+			_tex_fight_neutral = load("res://assets/hepatox/neutral.png")
+			_tex_walk1         = load("res://assets/hepatox/walk1.png")
+			_tex_walk2         = load("res://assets/hepatox/walk2.png")
+			_tex_jump          = load("res://assets/hepatox/jump.png")
+			_tex_punch         = load("res://assets/hepatox/punch.png")
+			_tex_crouch        = load("res://assets/hepatox/crouch.png")
+			_has_crouch = true
+			# Corps sur la couche 2 : le joueur (masque 1) ne peut plus se poser dessus.
+			collision_layer = 2
+		"gastrix":
+			_tex_fullbody      = load("res://assets/gastrix/fullbody.png")
+			_tex_fight_neutral = load("res://assets/gastrix/fightneutral.png")
+			_tex_walk1         = load("res://assets/gastrix/walk.png")
+			_tex_walk2         = load("res://assets/gastrix/walk2.png")
+			_tex_jump          = load("res://assets/gastrix/jump.png")
+			_tex_punch         = load("res://assets/gastrix/punch.png")
+			_tex_crouch        = load("res://assets/gastrix/crouch.png")
+			_has_crouch = true
+			# Corps sur la couche 2 : le joueur (masque 1) ne peut plus se poser dessus.
+			collision_layer = 2
+		"nefronix":
+			_tex_fullbody      = load("res://assets/nefronix/fullbody.png")
+			_tex_fight_neutral = load("res://assets/nefronix/fightneutral.png")
+			_tex_walk1         = load("res://assets/nefronix/walk1.png")
+			_tex_walk2         = load("res://assets/nefronix/walk2.png")
+			_tex_jump          = load("res://assets/nefronix/jump.png")
+			_tex_punch         = load("res://assets/nefronix/punch.png")
+			_tex_crouch        = load("res://assets/nefronix/crouch.png")
+			_has_crouch = true
+			# Corps sur la couche 2 : le joueur (masque 1) ne peut plus se poser dessus.
+			collision_layer = 2
+		"boss_final":
+			# Pas de sprite "neutre" dédié : on réutilise le fullbody pour la garde.
+			_tex_fullbody      = load("res://assets/Boss/Fullbody.png")
+			_tex_fight_neutral = load("res://assets/Boss/Fullbody.png")
+			_tex_walk1         = load("res://assets/Boss/walk1.png")
+			_tex_walk2         = load("res://assets/Boss/walk2.png")
+			_tex_jump          = load("res://assets/Boss/jump.png")
+			_tex_punch         = load("res://assets/Boss/punch.png")
+			_tex_crouch        = load("res://assets/Boss/crouch.png")
+			_has_crouch = true
+			# Un peu plus imposant que les autres ennemis : effet de boss final.
+			char_sprite.scale *= 1.25
+			# Corps sur la couche 2 : le joueur (masque 1) ne peut plus se poser dessus.
+			collision_layer = 2
 		_:
 			return
 	_has_sprite = true
+	_base_char_scale = char_sprite.scale
 	sprite.hide()
 	char_sprite.texture = _tex_fullbody
 	char_sprite.show()
@@ -89,6 +154,15 @@ func _load_sprites() -> void:
 func _update_sprite(delta: float) -> void:
 	if not _has_sprite:
 		return
+
+	# Vient de recevoir un coup : pose accroupie (un peu plus petite)
+	if _has_crouch and _crouch_timer > 0.0:
+		_crouch_timer -= delta
+		char_sprite.texture = _tex_crouch
+		char_sprite.scale = _base_char_scale * CROUCH_SCALE
+		char_sprite.flip_h = (_facing == 1) if not _sprite_faces_right else (_facing == -1)
+		return
+	char_sprite.scale = _base_char_scale
 
 	# En l'air après avoir reçu un coup
 	if not is_on_floor() and velocity.y < -30.0:
@@ -160,7 +234,12 @@ func receive_punch(damage: int, from_dir: int) -> void:
 	hp = max(0, hp - damage)
 	_hit_flash = HIT_FLASH_DURATION
 	velocity.x = from_dir * 280.0
-	velocity.y = -220.0
+	if _has_crouch:
+		# Reste au sol pour que l'accroupissement soit lisible.
+		_crouch_timer = CROUCH_DISPLAY_DURATION
+		velocity.y = 0.0
+	else:
+		velocity.y = -220.0
 	GameState.chronik_hp_changed.emit(hp, max_hp)
 	if hp == 0:
 		_die()

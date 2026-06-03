@@ -3,7 +3,7 @@ extends Node2D
 @onready var home_btn: TextureButton = $HomeLayer/HomeButton
 
 func _ready() -> void:
-	var tex := load("res://assets/sprites/homeButton.png") as Texture2D
+	var tex := load("res://assets/boutons/home.png") as Texture2D
 	if tex:
 		home_btn.texture_normal = tex
 

@@ -18,7 +18,7 @@ signal district_cleared(district: int)
 signal health_state_changed(state: int)
 @warning_ignore_restore("unused_signal")
 
-const DISTRICT_CHRONIK_COUNT := {1: 2, 2: 4, 3: 4, 4: 1}
+const DISTRICT_CHRONIK_COUNT := {1: 2, 2: 4, 3: 1}
 const SAVE_PATH := "user://save.cfg"
 const DAY_SECS := 86400
 const STATE_BLEAK := 0
@@ -29,7 +29,7 @@ const STREAK_VIVID := 12
 
 var current_district: int = 1
 var defeated_chroniks: Array[String] = []
-var defeated_per_district: Dictionary = {1: 0, 2: 0, 3: 0, 4: 0}
+var defeated_per_district: Dictionary = {1: 0, 2: 0, 3: 0}
 var streak_days: int = 0
 var has_adrenaline: bool = false
 var intro_seen: bool = false
@@ -50,7 +50,7 @@ func register_chronik_defeated(chronik_id: String, district: int) -> void:
 func reset_progress() -> void:
 	current_district = 1
 	defeated_chroniks.clear()
-	defeated_per_district = {1: 0, 2: 0, 3: 0, 4: 0}
+	defeated_per_district = {1: 0, 2: 0, 3: 0}
 	has_adrenaline = false
 	intro_seen = false
 	streak_days = 0
@@ -134,7 +134,7 @@ func load_from_disk() -> bool:
 	for c in loaded_chroniks:
 		defeated_chroniks.append(str(c))
 	var loaded_counts: Dictionary = cfg.get_value("progress", "defeated_per_district", {})
-	defeated_per_district = {1: 0, 2: 0, 3: 0, 4: 0}
+	defeated_per_district = {1: 0, 2: 0, 3: 0}
 	for k in loaded_counts:
 		defeated_per_district[int(k)] = int(loaded_counts[k])
 	has_adrenaline = bool(cfg.get_value("progress", "has_adrenaline", false))

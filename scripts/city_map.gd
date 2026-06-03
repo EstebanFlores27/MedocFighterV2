@@ -3,19 +3,22 @@ extends Control
 const DISTRICT_NAMES := {
 	1: "1. Place centrale",
 	2: "2. Centre commercial",
-	3: "3. Parc",
-	4: "4. Hôpital",
+	3: "3. Hôpital",
 }
 const DISTRICT_DESC := {
 	1: "Cortexia • Epidermos",
 	2: "Pancréok • Hépatox • Gastrix • Nefronix",
-	3: "Kardiox • Pulmos • Ostéox • Articulix",
-	4: "Boss final",
+	3: "Boss final",
 }
 const STATE_LABEL := {
 	GameState.STATE_BLEAK: "Noir et blanc",
 	GameState.STATE_PASTEL: "Couleurs pastel",
 	GameState.STATE_VIVID: "Couleurs vives",
+}
+const DISTRICT_SCENES := {
+	1: "res://scenes/level.tscn",
+	2: "res://scenes/level_2.tscn",
+	3: "res://scenes/level_3.tscn",
 }
 
 @onready var back_btn: Button = $TopBar/BackBtn
@@ -23,7 +26,6 @@ const STATE_LABEL := {
 	1: $CenterContainer/Grid/D1Card,
 	2: $CenterContainer/Grid/D2Card,
 	3: $CenterContainer/Grid/D3Card,
-	4: $CenterContainer/Grid/D4Card,
 }
 @onready var boost_streak_lbl: Label = $BoostPanel/VBox/StreakLabel
 @onready var boost_state_lbl: Label = $BoostPanel/VBox/StateLabel
@@ -49,6 +51,7 @@ func _ready() -> void:
 		enter_btn.disabled = (not unlocked) or cleared
 		enter_btn.text = "Libéré ✓" if cleared else ("Entrer" if unlocked else "Verrouillé")
 		enter_btn.pressed.connect(_on_district.bind(d))
+		card.modulate = Color(1, 1, 1, 1) if unlocked else Color(1, 1, 1, 0.7)
 	boost_open_btn.pressed.connect(_on_boost_open)
 	boost_dev_btn.pressed.connect(_on_boost_dev_advance)
 	boost_dev_btn.visible = OS.is_debug_build()
@@ -72,13 +75,16 @@ func _on_back() -> void:
 func _on_district(d: int) -> void:
 	if not GameState.is_district_unlocked(d) or GameState.is_district_cleared(d):
 		return
+	var scene_path: String = DISTRICT_SCENES.get(d, "")
+	if scene_path == "":
+		return
 	GameState.current_district = d
 	var card: PanelContainer = cards[d]
 	var tween := create_tween().set_parallel(true)
 	tween.tween_property(card, "modulate", Color(1.4, 1.4, 1.4, 1.0), 0.18)
 	tween.tween_property(card, "scale", Vector2(1.08, 1.08), 0.18)
 	tween.chain().tween_callback(func() -> void:
-		get_tree().change_scene_to_file("res://scenes/level.tscn")
+		get_tree().change_scene_to_file(scene_path)
 	)
 
 func _refresh_boost_panel() -> void:
