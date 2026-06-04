@@ -1,8 +1,20 @@
 extends CharacterBody2D
 class_name Chronik
 
+const FLOATING_NUMBER := preload("res://scenes/floating_number.tscn")
+const HP_BAR_WIDTH := 136.0
+const PORTRAITS := {
+	"cortexia": "res://assets/ennemies/Cortexia/portrait.png",
+	"epidermos": "res://assets/ennemies/Epidermos/portrait.png",
+	"pancreok": "res://assets/ennemies/Pancréok/full body.png",
+	"hepatox": "res://assets/ennemies/Hépatox/portrait.png",
+	"gastrix": "res://assets/ennemies/gastrix/portrait.png",
+	"nefronix": "res://assets/ennemies/Nefronix/portrait.png",
+	"boss_final": "res://assets/ennemies/Final boss/portrait.png",
+}
+
 const GRAVITY := 2200.0
-const ATTACK_COOLDOWN := 0.9
+const ATTACK_COOLDOWN := 1.15
 const HIT_FLASH_DURATION := 0.3
 const STOP_DISTANCE := 90.0
 
@@ -20,6 +32,8 @@ const STOP_DISTANCE := 90.0
 @onready var collider: CollisionShape2D = $Collider
 @onready var detect_area: Area2D = $DetectArea
 @onready var contact_area: Area2D = $ContactArea
+@onready var hp_bar: Control = $HpBar
+@onready var hp_bar_fill: ColorRect = $HpBar/Fill
 
 var hp: int
 var target: Node2D
@@ -68,7 +82,9 @@ func _on_player_detected(body: Node) -> void:
 		return
 	target = body
 	engaged = true
-	GameState.chronik_engaged.emit(display_name, max_hp)
+	hp_bar.visible = true
+	_update_hp_bar()
+	GameState.chronik_engaged.emit(display_name, max_hp, str(PORTRAITS.get(chronik_id, "")))
 	GameState.chronik_hp_changed.emit(hp, max_hp)
 
 func _on_countdown_done() -> void:
@@ -81,13 +97,40 @@ func receive_punch(damage: int, from_dir: int) -> void:
 	hp = max(0, hp - damage)
 	_hit_flash = HIT_FLASH_DURATION
 	velocity.x = from_dir * 280.0
-	velocity.y = -220.0
+	if _has_crouch:
+		# Reste au sol pour que l'accroupissement soit lisible.
+		_crouch_timer = CROUCH_DISPLAY_DURATION
+		velocity.y = 0.0
+	else:
+		velocity.y = -220.0
+	_update_hp_bar()
+	_spawn_damage_number(damage)
+	AudioManager.play_sfx("hit")
 	GameState.chronik_hp_changed.emit(hp, max_hp)
 	if hp == 0:
 		_die()
 
+func _update_hp_bar() -> void:
+	var ratio := float(hp) / maxf(1.0, max_hp)
+	hp_bar_fill.size.x = HP_BAR_WIDTH * ratio
+	hp_bar_fill.color = _hp_color(ratio)
+
+func _hp_color(ratio: float) -> Color:
+	if ratio > 0.5:
+		return Color(0.30, 0.80, 0.35)
+	if ratio > 0.25:
+		return Color(0.95, 0.65, 0.20)
+	return Color(0.90, 0.25, 0.25)
+
+func _spawn_damage_number(amount: int) -> void:
+	var n := FLOATING_NUMBER.instantiate()
+	get_tree().current_scene.add_child(n)
+	n.global_position = global_position + Vector2(0, -260)
+	n.set_value(amount, Color(1.0, 0.95, 0.5))
+
 func _die() -> void:
 	active = false
+	hp_bar.visible = false
 	GameState.chronik_defeated.emit(display_name, victory_text)
 	GameState.register_chronik_defeated(chronik_id, district_id)
 	contact_area.set_deferred("monitoring", false)

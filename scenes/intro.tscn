@@ -96,8 +96,8 @@ offset_top = 625.0
 offset_right = 230.0
 offset_bottom = 660.0
 theme_override_font_sizes/font_size = 16
+text = "Adhérix"
 horizontal_alignment = 1
-text = "Mini-Chronik"
 
 [node name="TopBar" type="Control" parent="."]
 layout_mode = 1

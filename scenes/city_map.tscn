@@ -1,201 +1,266 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=12 format=3 uid="uid://l5yc0jafqeel"]
 
-[ext_resource type="Script" path="res://scripts/city_map.gd" id="1_map"]
+[ext_resource type="Script" uid="uid://ccuo84tq5lbj7" path="res://scripts/city_map.gd" id="1_map"]
+[ext_resource type="Texture2D" uid="uid://eox1herfhfcb" path="res://assets/sprites/background_menu.png" id="2_bg"]
+[ext_resource type="PackedScene" path="res://scenes/pill_box.tscn" id="3_pillbox"]
+[ext_resource type="Texture2D" path="res://assets/background/carte_place centrale.png" id="4_c1"]
+[ext_resource type="Texture2D" path="res://assets/background/carte_c commercial.png" id="5_c2"]
+[ext_resource type="Texture2D" path="res://assets/background/carte_parc.png" id="6_c3"]
+[ext_resource type="Texture2D" path="res://assets/background/carte_hopital.png" id="7_c4"]
 
-[node name="CityMap" type="Control"]
+[sub_resource type="StyleBoxTexture" id="sb_d1"]
+content_margin_left = 16.0
+content_margin_top = 12.0
+content_margin_right = 16.0
+content_margin_bottom = 12.0
+texture = ExtResource("4_c1")
+modulate_color = Color(0.5, 0.5, 0.55, 1)
+
+[sub_resource type="StyleBoxTexture" id="sb_d2"]
+content_margin_left = 16.0
+content_margin_top = 12.0
+content_margin_right = 16.0
+content_margin_bottom = 12.0
+texture = ExtResource("5_c2")
+modulate_color = Color(0.5, 0.5, 0.55, 1)
+
+[sub_resource type="StyleBoxTexture" id="sb_d3"]
+content_margin_left = 16.0
+content_margin_top = 12.0
+content_margin_right = 16.0
+content_margin_bottom = 12.0
+texture = ExtResource("6_c3")
+modulate_color = Color(0.5, 0.5, 0.55, 1)
+
+[sub_resource type="StyleBoxTexture" id="sb_d4"]
+content_margin_left = 16.0
+content_margin_top = 12.0
+content_margin_right = 16.0
+content_margin_bottom = 12.0
+texture = ExtResource("7_c4")
+modulate_color = Color(0.5, 0.5, 0.55, 1)
+
+[node name="CityMap" type="Control" unique_id=2006199575]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_map")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="TextureRect" parent="." unique_id=2073527021]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color(0.12, 0.14, 0.18, 1)
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+stretch_mode = 6
 
-[node name="TopBar" type="HBoxContainer" parent="."]
+[node name="TopBar" type="HBoxContainer" parent="." unique_id=700493750]
 layout_mode = 0
 offset_left = 30.0
 offset_top = 20.0
-offset_right = 1500.0
+offset_right = 1821.0
 offset_bottom = 80.0
 theme_override_constants/separation = 30
 
-[node name="BackBtn" type="Button" parent="TopBar"]
-layout_mode = 2
+[node name="BackBtn" type="Button" parent="TopBar" unique_id=2089155958]
 custom_minimum_size = Vector2(160, 50)
+layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "← Menu"
 
-[node name="Title" type="Label" parent="TopBar"]
+[node name="Title" type="Label" parent="TopBar" unique_id=1194521715]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 theme_override_font_sizes/font_size = 40
+text = "SEEK CITY"
 horizontal_alignment = 1
 vertical_alignment = 1
-text = "SEEK CITY"
 
-[node name="TopBarSpacer" type="Control" parent="TopBar"]
+[node name="SettingsBtn" type="Button" parent="TopBar" unique_id=1454225294]
+custom_minimum_size = Vector2(160, 50)
 layout_mode = 2
-custom_minimum_size = Vector2(160, 0)
+theme_override_font_sizes/font_size = 20
+text = "⚙ Réglages"
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="ObjectiveBanner" type="Label" parent="." unique_id=1454225295]
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -720.0
+offset_top = 90.0
+offset_right = 720.0
+offset_bottom = 130.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 22
+text = "Objectif : libère les quartiers de Seek City en battant tous les Chroniks."
+horizontal_alignment = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1367891172]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 100.0
+offset_top = 150.0
 offset_bottom = -80.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Grid" type="GridContainer" parent="CenterContainer"]
+[node name="Grid" type="GridContainer" parent="CenterContainer" unique_id=1580007487]
 layout_mode = 2
-columns = 2
 theme_override_constants/h_separation = 28
 theme_override_constants/v_separation = 28
+columns = 2
 
-[node name="D1Card" type="PanelContainer" parent="CenterContainer/Grid"]
+[node name="D1Card" type="PanelContainer" parent="CenterContainer/Grid" unique_id=253447348]
+clip_contents = true
 custom_minimum_size = Vector2(440, 220)
 layout_mode = 2
-pivot_offset = Vector2(220, 110)
+theme_override_styles/panel = SubResource("sb_d1")
 
-[node name="VBox" type="VBoxContainer" parent="CenterContainer/Grid/D1Card"]
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/Grid/D1Card" unique_id=294021213]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Name" type="Label" parent="CenterContainer/Grid/D1Card/VBox"]
+[node name="Name" type="Label" parent="CenterContainer/Grid/D1Card/VBox" unique_id=1964275430]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
-horizontal_alignment = 1
 text = "1. Place centrale"
-
-[node name="Description" type="Label" parent="CenterContainer/Grid/D1Card/VBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1
+
+[node name="Description" type="Label" parent="CenterContainer/Grid/D1Card/VBox" unique_id=1690869979]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
 text = "Cortexia • Epidermos"
-
-[node name="Status" type="Label" parent="CenterContainer/Grid/D1Card/VBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1
-text = "Disponible"
 
-[node name="EnterBtn" type="Button" parent="CenterContainer/Grid/D1Card/VBox"]
+[node name="Status" type="Label" parent="CenterContainer/Grid/D1Card/VBox" unique_id=1457138110]
 layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Disponible"
+horizontal_alignment = 1
+
+[node name="EnterBtn" type="Button" parent="CenterContainer/Grid/D1Card/VBox" unique_id=337186947]
 custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "Entrer"
 
-[node name="D2Card" type="PanelContainer" parent="CenterContainer/Grid"]
+[node name="D2Card" type="PanelContainer" parent="CenterContainer/Grid" unique_id=1308591444]
+clip_contents = true
+modulate = Color(1, 1, 1, 0.7)
 custom_minimum_size = Vector2(440, 220)
 layout_mode = 2
-pivot_offset = Vector2(220, 110)
-modulate = Color(1, 1, 1, 0.7)
+theme_override_styles/panel = SubResource("sb_d2")
 
-[node name="VBox" type="VBoxContainer" parent="CenterContainer/Grid/D2Card"]
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/Grid/D2Card" unique_id=554880828]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Name" type="Label" parent="CenterContainer/Grid/D2Card/VBox"]
+[node name="Name" type="Label" parent="CenterContainer/Grid/D2Card/VBox" unique_id=327130134]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
-horizontal_alignment = 1
 text = "2. Centre commercial"
-
-[node name="Description" type="Label" parent="CenterContainer/Grid/D2Card/VBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1
+
+[node name="Description" type="Label" parent="CenterContainer/Grid/D2Card/VBox" unique_id=2025166859]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
 text = "Pancréok • Hépatox • Gastrix • Nefronix"
-
-[node name="Status" type="Label" parent="CenterContainer/Grid/D2Card/VBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1
-text = "Verrouillé"
 
-[node name="EnterBtn" type="Button" parent="CenterContainer/Grid/D2Card/VBox"]
+[node name="Status" type="Label" parent="CenterContainer/Grid/D2Card/VBox" unique_id=212698183]
 layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Verrouillé"
+horizontal_alignment = 1
+
+[node name="EnterBtn" type="Button" parent="CenterContainer/Grid/D2Card/VBox" unique_id=2039555551]
 custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
 theme_override_font_sizes/font_size = 22
 disabled = true
 text = "Verrouillé"
 
-[node name="D3Card" type="PanelContainer" parent="CenterContainer/Grid"]
+[node name="D3Card" type="PanelContainer" parent="CenterContainer/Grid" unique_id=1749964245]
+clip_contents = true
+modulate = Color(1, 1, 1, 0.7)
 custom_minimum_size = Vector2(440, 220)
 layout_mode = 2
-pivot_offset = Vector2(220, 110)
-modulate = Color(1, 1, 1, 0.7)
+theme_override_styles/panel = SubResource("sb_d3")
 
-[node name="VBox" type="VBoxContainer" parent="CenterContainer/Grid/D3Card"]
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/Grid/D3Card" unique_id=1091566416]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Name" type="Label" parent="CenterContainer/Grid/D3Card/VBox"]
+[node name="Name" type="Label" parent="CenterContainer/Grid/D3Card/VBox" unique_id=1865953408]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
-horizontal_alignment = 1
 text = "3. Parc"
-
-[node name="Description" type="Label" parent="CenterContainer/Grid/D3Card/VBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1
+
+[node name="Description" type="Label" parent="CenterContainer/Grid/D3Card/VBox" unique_id=737086724]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
 text = "Kardiox • Pulmos • Ostéox • Articulix"
-
-[node name="Status" type="Label" parent="CenterContainer/Grid/D3Card/VBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1
-text = "Verrouillé"
 
-[node name="EnterBtn" type="Button" parent="CenterContainer/Grid/D3Card/VBox"]
+[node name="Status" type="Label" parent="CenterContainer/Grid/D3Card/VBox" unique_id=2015860650]
 layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Verrouillé"
+horizontal_alignment = 1
+
+[node name="EnterBtn" type="Button" parent="CenterContainer/Grid/D3Card/VBox" unique_id=1505410182]
 custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
 theme_override_font_sizes/font_size = 22
 disabled = true
 text = "Verrouillé"
 
-[node name="D4Card" type="PanelContainer" parent="CenterContainer/Grid"]
+[node name="D4Card" type="PanelContainer" parent="CenterContainer/Grid" unique_id=106177488]
+clip_contents = true
+modulate = Color(1, 1, 1, 0.7)
 custom_minimum_size = Vector2(440, 220)
 layout_mode = 2
-pivot_offset = Vector2(220, 110)
-modulate = Color(1, 1, 1, 0.7)
+theme_override_styles/panel = SubResource("sb_d4")
 
-[node name="VBox" type="VBoxContainer" parent="CenterContainer/Grid/D4Card"]
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/Grid/D4Card" unique_id=152643363]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Name" type="Label" parent="CenterContainer/Grid/D4Card/VBox"]
+[node name="Name" type="Label" parent="CenterContainer/Grid/D4Card/VBox" unique_id=187868673]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
-horizontal_alignment = 1
 text = "4. Hôpital"
-
-[node name="Description" type="Label" parent="CenterContainer/Grid/D4Card/VBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1
+
+[node name="Description" type="Label" parent="CenterContainer/Grid/D4Card/VBox" unique_id=236235953]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
 text = "Boss final"
-
-[node name="Status" type="Label" parent="CenterContainer/Grid/D4Card/VBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1
-text = "Verrouillé"
 
-[node name="EnterBtn" type="Button" parent="CenterContainer/Grid/D4Card/VBox"]
+[node name="Status" type="Label" parent="CenterContainer/Grid/D4Card/VBox" unique_id=1408528422]
 layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Verrouillé"
+horizontal_alignment = 1
+
+[node name="EnterBtn" type="Button" parent="CenterContainer/Grid/D4Card/VBox" unique_id=1009292207]
 custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
 theme_override_font_sizes/font_size = 22
 disabled = true
 text = "Verrouillé"
 
-[node name="HelpText" type="Label" parent="."]
+[node name="HelpText" type="Label" parent="." unique_id=118334511]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -206,21 +271,24 @@ offset_left = -400.0
 offset_top = -50.0
 offset_right = 400.0
 offset_bottom = -20.0
-theme_override_font_sizes/font_size = 16
-horizontal_alignment = 1
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 18
 text = "Choisis un quartier disponible pour entrer."
+horizontal_alignment = 1
 
-[node name="BoostPanel" type="Panel" parent="."]
+[node name="BoostPanel" type="Panel" parent="." unique_id=1569526970]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -400.0
+offset_left = -430.0
 offset_top = 90.0
 offset_right = -30.0
-offset_bottom = 360.0
+offset_bottom = 610.0
+grow_horizontal = 0
 
-[node name="VBox" type="VBoxContainer" parent="BoostPanel"]
+[node name="VBox" type="VBoxContainer" parent="BoostPanel" unique_id=743313060]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -229,6 +297,8 @@ offset_left = 16.0
 offset_top = 14.0
 offset_right = -16.0
 offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/separation = 8
 
 [node name="Title" type="Label" parent="BoostPanel/VBox"]
@@ -236,33 +306,44 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "Coffre quotidien"
 
-[node name="StreakLabel" type="Label" parent="BoostPanel/VBox"]
+[node name="StreakLabel" type="Label" parent="BoostPanel/VBox" unique_id=1448279777]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 18
 text = "Série : 0 jour"
 
-[node name="StateLabel" type="Label" parent="BoostPanel/VBox"]
+[node name="Gauge" type="TextureRect" parent="BoostPanel/VBox" unique_id=378132100]
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
-text = "État : Noir et blanc (-0% dégâts)"
+expand_mode = 1
+stretch_mode = 5
 
-[node name="StatusLabel" type="Label" parent="BoostPanel/VBox"]
+[node name="StateLabel" type="Label" parent="BoostPanel/VBox" unique_id=378132172]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 16
+text = "Protection : -0% dégâts"
+horizontal_alignment = 1
+
+[node name="StatusLabel" type="Label" parent="BoostPanel/VBox" unique_id=1606926152]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
 text = "Coffre disponible !"
 
-[node name="OpenBtn" type="Button" parent="BoostPanel/VBox"]
+[node name="PillBox" parent="BoostPanel/VBox" instance=ExtResource("3_pillbox") unique_id=1951013148]
+custom_minimum_size = Vector2(0, 180)
 layout_mode = 2
+
+[node name="OpenBtn" type="Button" parent="BoostPanel/VBox" unique_id=947015856]
 custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Ouvrir le coffre"
 
-[node name="DevBtn" type="Button" parent="BoostPanel/VBox"]
-layout_mode = 2
+[node name="DevBtn" type="Button" parent="BoostPanel/VBox" unique_id=293515578]
 custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
 theme_override_font_sizes/font_size = 13
 text = "(dev) Avancer 24 h"
 
-[node name="CountdownTimer" type="Timer" parent="."]
+[node name="CountdownTimer" type="Timer" parent="." unique_id=1912996071]
 wait_time = 1.0
 autostart = false

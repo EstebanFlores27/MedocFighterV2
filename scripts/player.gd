@@ -10,6 +10,7 @@ const BASE_PUNCH_DAMAGE := 10
 const INVULN_DURATION := 0.6
 const SOIN_HEAL_AMOUNT := 20
 const BUFF_DURATION := 10.0
+const FLOATING_NUMBER := preload("res://scenes/floating_number.tscn")
 
 @onready var sprite: ColorRect = $Sprite
 @onready var collider: CollisionShape2D = $Collider
@@ -56,9 +57,9 @@ func _ready() -> void:
 	_apply_health_tint(GameState.get_health_state())
 	GameState.player_hp_changed.emit(hp, MAX_HP)
 	GameState.med_inventory_changed.emit(med_charges.duplicate())
-	GameState.player_buff_changed.emit(false, false)
+	GameState.player_buff_changed.emit(false, false, 0.0, 0.0)
 
-func _on_chronik_engaged(_display_name: String, _max_hp: int) -> void:
+func _on_chronik_engaged(_display_name: String, _max_hp: int, _portrait_path: String) -> void:
 	locked = true
 
 func _on_countdown_done() -> void:
@@ -105,6 +106,8 @@ func use_med(med_id: String) -> void:
 			_speed_buff_t = BUFF_DURATION
 		"force":
 			_force_buff_t = BUFF_DURATION
+	AudioManager.play_sfx("med")
+	GameState.med_charges = med_charges.duplicate()
 	GameState.med_inventory_changed.emit(med_charges.duplicate())
 
 func _physics_process(delta: float) -> void:
@@ -147,6 +150,7 @@ func _physics_process(delta: float) -> void:
 	_apply_visual_state()
 
 func _start_punch() -> void:
+	AudioManager.play_sfx("punch")
 	_punch_cd = PUNCH_COOLDOWN
 	_punch_t = PUNCH_DURATION
 	punch_hitbox.position.x = _default_punch_offset * facing
@@ -172,6 +176,8 @@ func take_damage(amount: int, from_dir: int) -> void:
 	_invuln_t = INVULN_DURATION
 	velocity.x = from_dir * 350.0
 	velocity.y = -400.0
+	_spawn_damage_number(modified)
+	AudioManager.play_sfx("hit")
 	GameState.player_hp_changed.emit(hp, MAX_HP)
 	if hp == 0:
 		locked = true
@@ -181,13 +187,21 @@ func heal(amount: int) -> void:
 	hp = mini(MAX_HP, hp + amount)
 	GameState.player_hp_changed.emit(hp, MAX_HP)
 
+func _spawn_damage_number(amount: int) -> void:
+	if amount <= 0:
+		return
+	var n := FLOATING_NUMBER.instantiate()
+	get_tree().current_scene.add_child(n)
+	n.global_position = global_position + Vector2(0, -260)
+	n.set_value(amount, Color(1.0, 0.45, 0.45))
+
 func _emit_buff_change_if_needed() -> void:
 	var s_active := _speed_buff_t > 0.0
 	var f_active := _force_buff_t > 0.0
 	if s_active != _last_speed_active or f_active != _last_force_active:
 		_last_speed_active = s_active
 		_last_force_active = f_active
-		GameState.player_buff_changed.emit(s_active, f_active)
+		GameState.player_buff_changed.emit(s_active, f_active, _speed_buff_t, _force_buff_t)
 
 func _apply_visual_state() -> void:
 	var alpha := 1.0

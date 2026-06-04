@@ -1,6 +1,14 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/combat_hud.gd" id="1_hud"]
+[ext_resource type="Texture2D" path="res://assets/boiteMedicament/pilule soin.png" id="2_soin"]
+[ext_resource type="Texture2D" path="res://assets/boiteMedicament/pilule vitesse.png" id="3_vitesse"]
+[ext_resource type="Texture2D" path="res://assets/boiteMedicament/pilule force.png" id="4_force"]
+[ext_resource type="Texture2D" path="res://assets/buttons/design 2/pause.png" id="5_pause"]
+[ext_resource type="Texture2D" path="res://assets/hud/jauge_sante.png" id="6_frame"]
+[ext_resource type="Texture2D" path="res://assets/boiteMedicament/boite_vide.png" id="7_tray"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pause"]
 
 [node name="CombatHUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
@@ -12,33 +20,58 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 
+[node name="ObjectiveLine" type="Label" parent="Root"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -360.0
+offset_top = 6.0
+offset_right = 360.0
+offset_bottom = 34.0
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+text = "Bats tous les Chroniks du quartier"
+
 [node name="TopLeft" type="Control" parent="Root"]
 layout_mode = 0
 offset_left = 40.0
-offset_top = 40.0
-offset_right = 460.0
-offset_bottom = 120.0
+offset_top = 36.0
+offset_right = 440.0
+offset_bottom = 170.0
 mouse_filter = 2
 
-[node name="PlayerHpLabelTitle" type="Label" parent="Root/TopLeft"]
-layout_mode = 0
-offset_right = 200.0
-offset_bottom = 28.0
-text = "TOI"
+[node name="Frame" type="TextureRect" parent="Root/TopLeft"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("6_frame")
+expand_mode = 1
+stretch_mode = 0
 
 [node name="PlayerHpBar" type="ProgressBar" parent="Root/TopLeft"]
 layout_mode = 0
-offset_top = 30.0
-offset_right = 420.0
-offset_bottom = 60.0
+offset_left = 144.0
+offset_top = 54.0
+offset_right = 370.0
+offset_bottom = 80.0
+mouse_filter = 2
 max_value = 100.0
 value = 100.0
+show_percentage = false
 
 [node name="PlayerHpLabel" type="Label" parent="Root/TopLeft"]
 layout_mode = 0
-offset_top = 62.0
-offset_right = 420.0
-offset_bottom = 90.0
+offset_left = 144.0
+offset_top = 48.0
+offset_right = 370.0
+offset_bottom = 86.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
 text = "100 / 100"
 
 [node name="TopCenter" type="Control" parent="Root"]
@@ -46,28 +79,141 @@ layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_right = 0.5
-anchor_top = 0.0
-anchor_bottom = 0.0
-offset_left = -210.0
-offset_top = 40.0
-offset_right = 210.0
-offset_bottom = 130.0
+offset_left = -300.0
+offset_top = 36.0
+offset_right = 300.0
+offset_bottom = 180.0
 mouse_filter = 2
+
+[node name="Portrait" type="TextureRect" parent="Root/TopCenter"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 28.0
+offset_right = 120.0
+offset_bottom = 148.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
 
 [node name="ChronikName" type="Label" parent="Root/TopCenter"]
 layout_mode = 0
-offset_right = 420.0
-offset_bottom = 28.0
-horizontal_alignment = 1
+offset_left = 134.0
+offset_top = 4.0
+offset_right = 600.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 26
+vertical_alignment = 1
 text = "Cortexia"
 
-[node name="ChronikHpBar" type="ProgressBar" parent="Root/TopCenter"]
+[node name="BarSlot" type="Control" parent="Root/TopCenter"]
 layout_mode = 0
-offset_top = 30.0
-offset_right = 420.0
-offset_bottom = 60.0
+offset_left = 134.0
+offset_top = 44.0
+offset_right = 534.0
+offset_bottom = 178.0
+mouse_filter = 2
+
+[node name="Frame" type="TextureRect" parent="Root/TopCenter/BarSlot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("6_frame")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="ChronikHpBar" type="ProgressBar" parent="Root/TopCenter/BarSlot"]
+layout_mode = 0
+offset_left = 144.0
+offset_top = 54.0
+offset_right = 370.0
+offset_bottom = 80.0
+mouse_filter = 2
 max_value = 60.0
 value = 60.0
+show_percentage = false
+
+[node name="ChronikHpLabel" type="Label" parent="Root/TopCenter/BarSlot"]
+layout_mode = 0
+offset_left = 144.0
+offset_top = 48.0
+offset_right = 370.0
+offset_bottom = 86.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+text = "60 / 60"
+
+[node name="PauseBtn" type="Button" parent="Root"]
+layout_mode = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -100.0
+offset_top = 12.0
+offset_right = -20.0
+offset_bottom = 92.0
+focus_mode = 0
+theme_override_constants/icon_max_width = 80
+theme_override_styles/normal = SubResource("StyleBoxEmpty_pause")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_pause")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_pause")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_pause")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_pause")
+flat = true
+icon = ExtResource("5_pause")
+icon_alignment = 1
+vertical_icon_alignment = 1
+expand_icon = true
+tooltip_text = "Pause"
+
+[node name="BuffBox" type="VBoxContainer" parent="Root"]
+layout_mode = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -370.0
+offset_top = 80.0
+offset_right = -30.0
+offset_bottom = 190.0
+theme_override_constants/separation = 10
+
+[node name="SpeedRow" type="HBoxContainer" parent="Root/BuffBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="Root/BuffBox/SpeedRow"]
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Vitesse"
+
+[node name="Bar" type="ProgressBar" parent="Root/BuffBox/SpeedRow"]
+custom_minimum_size = Vector2(200, 22)
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 10.0
+value = 10.0
+show_percentage = false
+
+[node name="ForceRow" type="HBoxContainer" parent="Root/BuffBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="Root/BuffBox/ForceRow"]
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Force"
+
+[node name="Bar" type="ProgressBar" parent="Root/BuffBox/ForceRow"]
+custom_minimum_size = Vector2(200, 22)
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 10.0
+value = 10.0
+show_percentage = false
 
 [node name="CountdownLabel" type="Label" parent="Root"]
 layout_mode = 1
@@ -163,7 +309,8 @@ theme_override_font_sizes/font_size = 22
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
-text = "La maladie a pris le dessus pour cette fois.\nReprends ton souffle et réessaie — tes médicaments seront remis à neuf."
+text = "La maladie a pris le dessus pour cette fois.
+Reprends ton souffle et réessaie — tes médicaments seront remis à neuf."
 
 [node name="Buttons" type="HBoxContainer" parent="Root/DefeatPanel/VBox"]
 layout_mode = 2
@@ -182,54 +329,78 @@ custom_minimum_size = Vector2(200, 50)
 theme_override_font_sizes/font_size = 24
 text = "Retour à la carte"
 
-[node name="MedBox" type="HBoxContainer" parent="Root"]
+[node name="MedTray" type="Control" parent="Root"]
 layout_mode = 1
-anchors_preset = 7
 anchor_left = 0.5
-anchor_top = 1.0
 anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -390.0
-offset_top = -160.0
-offset_right = 390.0
-offset_bottom = -40.0
-theme_override_constants/separation = 30
-
-[node name="SoinBtn" type="Button" parent="Root/MedBox"]
-layout_mode = 2
-custom_minimum_size = Vector2(240, 110)
-theme_override_font_sizes/font_size = 22
-text = "Soin
-+20 PV
-[1]"
-
-[node name="VitesseBtn" type="Button" parent="Root/MedBox"]
-layout_mode = 2
-custom_minimum_size = Vector2(240, 110)
-theme_override_font_sizes/font_size = 22
-text = "Vitesse
-x2 vitesse
-[1]"
-
-[node name="ForceBtn" type="Button" parent="Root/MedBox"]
-layout_mode = 2
-custom_minimum_size = Vector2(240, 110)
-theme_override_font_sizes/font_size = 22
-text = "Force
-x2 dégâts
-[1]"
-
-[node name="BuffLabel" type="Label" parent="Root"]
-layout_mode = 1
-anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 40.0
-offset_top = -160.0
-offset_right = 600.0
-offset_bottom = -120.0
-theme_override_font_sizes/font_size = 24
-text = ""
+offset_left = -150.0
+offset_top = -206.0
+offset_right = 150.0
+offset_bottom = -6.0
+mouse_filter = 2
+
+[node name="Tray" type="TextureRect" parent="Root/MedTray"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("7_tray")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="VitesseBtn" type="Button" parent="Root/MedTray"]
+offset_right = 80.0
+offset_bottom = 120.0
+focus_mode = 0
+theme_override_constants/icon_max_width = 54
+theme_override_styles/normal = SubResource("StyleBoxEmpty_pause")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_pause")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_pause")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_pause")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_pause")
+flat = true
+icon = ExtResource("3_vitesse")
+icon_alignment = 1
+vertical_icon_alignment = 1
+expand_icon = true
+tooltip_text = "Vitesse — ×2 vitesse pendant 10 s. (touche 2)"
+
+[node name="SoinBtn" type="Button" parent="Root/MedTray"]
+offset_right = 80.0
+offset_bottom = 120.0
+focus_mode = 0
+theme_override_constants/icon_max_width = 54
+theme_override_styles/normal = SubResource("StyleBoxEmpty_pause")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_pause")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_pause")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_pause")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_pause")
+flat = true
+icon = ExtResource("2_soin")
+icon_alignment = 1
+vertical_icon_alignment = 1
+expand_icon = true
+tooltip_text = "Soin — restaure +20 PV. (touche 1)"
+
+[node name="ForceBtn" type="Button" parent="Root/MedTray"]
+offset_right = 80.0
+offset_bottom = 120.0
+focus_mode = 0
+theme_override_constants/icon_max_width = 54
+theme_override_styles/normal = SubResource("StyleBoxEmpty_pause")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_pause")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_pause")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_pause")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_pause")
+flat = true
+icon = ExtResource("4_force")
+icon_alignment = 1
+vertical_icon_alignment = 1
+expand_icon = true
+tooltip_text = "Force — ×2 dégâts pendant 10 s. (touche 3)"
 
 [node name="Help" type="Label" parent="Root"]
 layout_mode = 1
@@ -237,7 +408,7 @@ anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 40.0
-offset_top = -30.0
-offset_right = 1500.0
+offset_top = -34.0
+offset_right = 1880.0
 offset_bottom = -6.0
 text = "◀ ▶ : se déplacer    ▲ / Espace : sauter    ▼ : se baisser    X : frapper    1/2/3 : utiliser un médoc"

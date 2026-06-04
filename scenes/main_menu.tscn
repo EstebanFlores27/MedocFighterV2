@@ -69,6 +69,12 @@ theme_override_font_sizes/font_size = 30
 disabled = true
 text = "Continuer"
 
+[node name="SettingsBtn" type="Button" parent="CenterContainer/VBox"]
+custom_minimum_size = Vector2(440, 64)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Paramètres"
+
 [node name="QuitBtn" type="Button" parent="CenterContainer/VBox"]
 custom_minimum_size = Vector2(440, 64)
 layout_mode = 2
