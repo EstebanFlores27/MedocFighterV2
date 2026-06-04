@@ -3,39 +3,46 @@ extends Control
 const DISTRICT_NAMES := {
 	1: "1. Place centrale",
 	2: "2. Centre commercial",
-	3: "3. Hôpital",
+	3: "3. Parc",
+	4: "4. Hôpital",
 }
 const DISTRICT_DESC := {
 	1: "Cortexia • Epidermos",
 	2: "Pancréok • Hépatox • Gastrix • Nefronix",
-	3: "Boss final",
-}
-const STATE_LABEL := {
-	GameState.STATE_BLEAK: "Noir et blanc",
-	GameState.STATE_PASTEL: "Couleurs pastel",
-	GameState.STATE_VIVID: "Couleurs vives",
+	3: "Kardiox • Pulmos • Ostéox • Articulix",
+	4: "Boss final",
 }
 const DISTRICT_SCENES := {
 	1: "res://scenes/level.tscn",
-	2: "res://scenes/level_2.tscn",
-	3: "res://scenes/level_3.tscn",
+	2: "res://scenes/level.tscn",
+	3: "res://scenes/level.tscn",
+	4: "res://scenes/level.tscn",
 }
 
+const SETTINGS_OVERLAY := preload("res://scenes/settings_overlay.tscn")
+const GUIDE_BUBBLE := preload("res://scenes/guide_bubble.tscn")
+const MAP_HINT := "Bienvenue à Seek City ! Entre dans un quartier et bats tous ses Chroniks pour ouvrir le quartier suivant."
+
 @onready var back_btn: Button = $TopBar/BackBtn
+@onready var settings_btn: Button = $TopBar/SettingsBtn
 @onready var cards := {
 	1: $CenterContainer/Grid/D1Card,
 	2: $CenterContainer/Grid/D2Card,
 	3: $CenterContainer/Grid/D3Card,
+	4: $CenterContainer/Grid/D4Card,
 }
 @onready var boost_streak_lbl: Label = $BoostPanel/VBox/StreakLabel
+@onready var boost_gauge: TextureRect = $BoostPanel/VBox/Gauge
 @onready var boost_state_lbl: Label = $BoostPanel/VBox/StateLabel
 @onready var boost_status_lbl: Label = $BoostPanel/VBox/StatusLabel
+@onready var pill_box: Control = $BoostPanel/VBox/PillBox
 @onready var boost_open_btn: Button = $BoostPanel/VBox/OpenBtn
 @onready var boost_dev_btn: Button = $BoostPanel/VBox/DevBtn
 @onready var countdown_timer: Timer = $CountdownTimer
 
 func _ready() -> void:
 	back_btn.pressed.connect(_on_back)
+	settings_btn.pressed.connect(_on_settings)
 	for d in cards.keys():
 		var card: PanelContainer = cards[d]
 		var name_lbl: Label = card.get_node("VBox/Name")
@@ -58,6 +65,21 @@ func _ready() -> void:
 	countdown_timer.timeout.connect(_refresh_boost_panel)
 	countdown_timer.start()
 	_refresh_boost_panel()
+	_maybe_show_map_hint()
+
+func _on_settings() -> void:
+	AudioManager.play_sfx("click")
+	var overlay := SETTINGS_OVERLAY.instantiate()
+	add_child(overlay)
+	overlay.open()
+
+func _maybe_show_map_hint() -> void:
+	if GameState.is_hint_seen("map_intro"):
+		return
+	var bubble := GUIDE_BUBBLE.instantiate()
+	add_child(bubble)
+	bubble.show_message(MAP_HINT)
+	GameState.mark_hint_seen("map_intro")
 
 func _district_status(d: int) -> String:
 	if GameState.is_district_cleared(d):
@@ -75,9 +97,7 @@ func _on_back() -> void:
 func _on_district(d: int) -> void:
 	if not GameState.is_district_unlocked(d) or GameState.is_district_cleared(d):
 		return
-	var scene_path: String = DISTRICT_SCENES.get(d, "")
-	if scene_path == "":
-		return
+	var scene_path: String = DISTRICT_SCENES.get(d, "res://scenes/level.tscn")
 	GameState.current_district = d
 	var card: PanelContainer = cards[d]
 	var tween := create_tween().set_parallel(true)
@@ -87,11 +107,16 @@ func _on_district(d: int) -> void:
 		get_tree().change_scene_to_file(scene_path)
 	)
 
+func _gauge_frame() -> int:
+	var t := clampf(float(GameState.streak_days) / float(GameState.STREAK_VIVID), 0.0, 1.0)
+	return clampi(int(round(t * 9.0)) + 1, 1, 10)
+
 func _refresh_boost_panel() -> void:
-	var state := GameState.get_health_state()
 	var dmg_pct := int(round((1.0 - GameState.get_damage_taken_multiplier()) * 100.0))
 	boost_streak_lbl.text = "Série : %d jour%s" % [GameState.streak_days, "s" if GameState.streak_days != 1 else ""]
-	boost_state_lbl.text = "État : %s (-%d%% dégâts)" % [STATE_LABEL[state], dmg_pct]
+	boost_state_lbl.text = "Protection : -%d%% dégâts" % dmg_pct
+	boost_gauge.texture = load("res://assets/hud/jauge_daily_box_%d.png" % _gauge_frame())
+	pill_box.set_state(GameState.week_pills_taken(), GameState.is_daily_boost_available())
 	if GameState.is_daily_boost_available():
 		boost_status_lbl.text = "Coffre disponible !"
 		boost_open_btn.disabled = false
@@ -109,7 +134,12 @@ func _format_duration(secs: int) -> String:
 	return "%02d h %02d m %02d s" % [h, m, s]
 
 func _on_boost_open() -> void:
+	if not GameState.is_daily_boost_available():
+		return
+	var slot := GameState.week_pills_taken()
 	if GameState.open_daily_boost():
+		AudioManager.play_sfx("med")
+		pill_box.play_consume(slot, GameState.week_pills_taken(), GameState.is_daily_boost_available())
 		_flash_boost_panel()
 	_refresh_boost_panel()
 	_refresh_district_cards()

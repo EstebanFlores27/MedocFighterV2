@@ -45,3 +45,22 @@ collision_mask = 1
 
 [node name="ContactShape" type="CollisionShape2D" parent="ContactArea"]
 shape = SubResource("RectangleShape2D_contact")
+
+[node name="HpBar" type="Control" parent="."]
+visible = false
+offset_left = -70.0
+offset_top = -384.0
+offset_right = 70.0
+offset_bottom = -366.0
+
+[node name="Bg" type="ColorRect" parent="HpBar"]
+offset_right = 140.0
+offset_bottom = 18.0
+color = Color(0.08, 0.08, 0.11, 0.9)
+
+[node name="Fill" type="ColorRect" parent="HpBar"]
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 138.0
+offset_bottom = 16.0
+color = Color(0.3, 0.8, 0.35, 1)

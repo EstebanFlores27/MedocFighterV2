@@ -6,7 +6,7 @@ extends Node
 @warning_ignore_start("unused_signal")
 signal player_hp_changed(hp: int, max_hp: int)
 signal player_defeated
-signal chronik_engaged(display_name: String, max_hp: int)
+signal chronik_engaged(display_name: String, max_hp: int, portrait_path: String)
 signal chronik_hp_changed(hp: int, max_hp: int)
 signal chronik_defeated(display_name: String, victory_text: String)
 signal combat_countdown_done
@@ -18,7 +18,7 @@ signal district_cleared(district: int)
 signal health_state_changed(state: int)
 @warning_ignore_restore("unused_signal")
 
-const DISTRICT_CHRONIK_COUNT := {1: 2, 2: 4, 3: 1}
+const DISTRICT_CHRONIK_COUNT := {1: 2, 2: 4, 3: 4, 4: 1}
 const SAVE_PATH := "user://save.cfg"
 const DAY_SECS := 86400
 const STATE_BLEAK := 0
@@ -29,13 +29,27 @@ const STREAK_VIVID := 12
 
 var current_district: int = 1
 var defeated_chroniks: Array[String] = []
-var defeated_per_district: Dictionary = {1: 0, 2: 0, 3: 0}
+var defeated_per_district: Dictionary = {1: 0, 2: 0, 3: 0, 4: 0}
 var streak_days: int = 0
 var has_adrenaline: bool = false
 var intro_seen: bool = false
 var last_boost_unix: int = 0
 var player_gender: int = 0  # 0 = Homme, 1 = Femme
 var med_charges: Dictionary = {"soin": 1, "vitesse": 1, "force": 1}
+var hints_seen: Dictionary = {}
+var doses_taken: int = 0  # lifetime daily doses; weekly pillbox position = mod 7
+
+func week_pills_taken() -> int:
+	return doses_taken % 7
+
+func is_hint_seen(id: String) -> bool:
+	return bool(hints_seen.get(id, false))
+
+func mark_hint_seen(id: String) -> void:
+	if hints_seen.get(id, false):
+		return
+	hints_seen[id] = true
+	save_to_disk()
 
 func register_chronik_defeated(chronik_id: String, district: int) -> void:
 	if defeated_chroniks.has(chronik_id):
@@ -50,13 +64,15 @@ func register_chronik_defeated(chronik_id: String, district: int) -> void:
 func reset_progress() -> void:
 	current_district = 1
 	defeated_chroniks.clear()
-	defeated_per_district = {1: 0, 2: 0, 3: 0}
+	defeated_per_district = {1: 0, 2: 0, 3: 0, 4: 0}
 	has_adrenaline = false
 	intro_seen = false
 	streak_days = 0
 	last_boost_unix = 0
 	player_gender = 0
 	med_charges = {"soin": 1, "vitesse": 1, "force": 1}
+	hints_seen = {}
+	doses_taken = 0
 	health_state_changed.emit(get_health_state())
 
 func get_health_state() -> int:
@@ -95,6 +111,7 @@ func open_daily_boost() -> bool:
 	else:
 		streak_days = 1
 	last_boost_unix = now
+	doses_taken += 1
 	save_to_disk()
 	health_state_changed.emit(get_health_state())
 	return true
@@ -120,8 +137,10 @@ func save_to_disk() -> void:
 	cfg.set_value("progress", "has_adrenaline", has_adrenaline)
 	cfg.set_value("progress", "intro_seen", intro_seen)
 	cfg.set_value("progress", "player_gender", player_gender)
+	cfg.set_value("progress", "hints_seen", hints_seen)
 	cfg.set_value("daily", "streak_days", streak_days)
 	cfg.set_value("daily", "last_boost_unix", last_boost_unix)
+	cfg.set_value("daily", "doses_taken", doses_taken)
 	cfg.save(SAVE_PATH)
 
 func load_from_disk() -> bool:
@@ -134,14 +153,16 @@ func load_from_disk() -> bool:
 	for c in loaded_chroniks:
 		defeated_chroniks.append(str(c))
 	var loaded_counts: Dictionary = cfg.get_value("progress", "defeated_per_district", {})
-	defeated_per_district = {1: 0, 2: 0, 3: 0}
+	defeated_per_district = {1: 0, 2: 0, 3: 0, 4: 0}
 	for k in loaded_counts:
 		defeated_per_district[int(k)] = int(loaded_counts[k])
 	has_adrenaline = bool(cfg.get_value("progress", "has_adrenaline", false))
 	intro_seen = bool(cfg.get_value("progress", "intro_seen", false))
 	player_gender = int(cfg.get_value("progress", "player_gender", 0))
+	hints_seen = cfg.get_value("progress", "hints_seen", {})
 	streak_days = int(cfg.get_value("daily", "streak_days", cfg.get_value("progress", "streak_days", 0)))
 	last_boost_unix = int(cfg.get_value("daily", "last_boost_unix", 0))
+	doses_taken = int(cfg.get_value("daily", "doses_taken", 0))
 	health_state_changed.emit(get_health_state())
 	return true
 
