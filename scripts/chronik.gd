@@ -97,12 +97,7 @@ func receive_punch(damage: int, from_dir: int) -> void:
 	hp = max(0, hp - damage)
 	_hit_flash = HIT_FLASH_DURATION
 	velocity.x = from_dir * 280.0
-	if _has_crouch:
-		# Reste au sol pour que l'accroupissement soit lisible.
-		_crouch_timer = CROUCH_DISPLAY_DURATION
-		velocity.y = 0.0
-	else:
-		velocity.y = -220.0
+	velocity.y = -220.0
 	_update_hp_bar()
 	_spawn_damage_number(damage)
 	AudioManager.play_sfx("hit")
