@@ -4,7 +4,7 @@ const TYPE_SPEED := 0.022
 
 const PAGES: Array[String] = [
 	"Psst ! Hé, toi ! De l'autre côté de la vitre ! Baisse les yeux, je suis là !",
-	"Ne panique pas, je sais que j'ai une tête de monstre, mais je suis inoffensif. Je m'appelle Adhérix. Je suis un Mini-Chronik — une anomalie, le seul et unique de mon espèce. Et honnêtement, heureusement que tu es là, parce que j'ai besoin d'aide.",
+	"Ne panique pas, je sais que j'ai une tête de monstre, mais je suis inoffensif. Je m'appelle Mini-Chronik. Je suis une sorte d'anomalie... le seul et unique de mon espèce. Et honnêtement, heureusement que tu es là, parce que j'ai besoin d'aide.",
 	"Je vois que tu es en noir et blanc. C'est parce que le diagnostic vient de tomber, tu viens d'apprendre que tu as une maladie chronique. C'est normal que tu sois épuisé et que tu commences tout en bas.",
 	"Tu vois ces ombres immenses ? Ce sont les Chroniks. Ce sont des maladies nées des traitements abandonnés, de la négligence et des oublis de médicaments des patients de cette ville. Ils ont envahi Seek City.",
 	"Pour des raisons de sécurité, le dôme a verrouillé la ville quartier par quartier. On ne peut pas aller partout d'un coup. Il faut affronter les Chroniks d'un quartier pour débloquer le suivant.",
