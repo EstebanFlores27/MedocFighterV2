@@ -199,12 +199,8 @@ func _on_defeat_map_pressed() -> void:
 
 func _on_continue_pressed() -> void:
 	if _pending_district_cleared > 0:
-		var district := _pending_district_cleared
+		_show_district_cleared_panel(_pending_district_cleared)
 		_pending_district_cleared = 0
-		if GameState.is_final_district(district):
-			get_tree().change_scene_to_file("res://scenes/ending.tscn")
-			return
-		_show_district_cleared_panel(district)
 		_showing_district_panel = true
 		return
 	if _showing_district_panel:

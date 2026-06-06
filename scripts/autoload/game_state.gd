@@ -178,6 +178,3 @@ func is_district_unlocked(d: int) -> bool:
 	if d == 1:
 		return true
 	return is_district_cleared(d - 1)
-
-func is_final_district(d: int) -> bool:
-	return not DISTRICT_CHRONIK_COUNT.has(d + 1)
