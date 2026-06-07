@@ -31,6 +31,20 @@ func place_top() -> void:
 	for child in _hb.get_children():
 		(child as Control).size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 
+# Bottom-centre of the screen. Used in combat once the med tray moved to the
+# left, freeing the middle for the tip bubble (easier to read mid-action).
+func place_bottom_center() -> void:
+	_hb.anchor_left = 0.5
+	_hb.anchor_right = 0.5
+	_hb.anchor_top = 1.0
+	_hb.anchor_bottom = 1.0
+	_hb.offset_left = -380.0
+	_hb.offset_right = 380.0
+	_hb.offset_top = -270.0
+	_hb.offset_bottom = -50.0
+	_hb.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	_hb.alignment = BoxContainer.ALIGNMENT_CENTER
+
 func show_message(text: String) -> void:
 	_queue.append(text)
 	if not _showing:

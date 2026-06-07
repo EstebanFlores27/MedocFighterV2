@@ -13,7 +13,7 @@ func _ready() -> void:
 	GameState.combat_resolved.connect(_on_combat_resolved)
 	GameState.player_defeated.connect(_on_player_defeated)
 
-func _on_chronik_engaged(_display_name: String, _max_hp: int) -> void:
+func _on_chronik_engaged(_display_name: String, _max_hp: int, _portrait_path: String) -> void:
 	home_btn.visible = false
 
 func _on_combat_resolved() -> void:
