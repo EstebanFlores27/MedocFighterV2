@@ -41,6 +41,7 @@ const MAP_HINT := "Bienvenue à Seek City ! Entre dans un quartier et bats tous 
 @onready var countdown_timer: Timer = $CountdownTimer
 
 func _ready() -> void:
+	AudioManager.play_background()
 	back_btn.pressed.connect(_on_back)
 	settings_btn.pressed.connect(_on_settings)
 	for d in cards.keys():

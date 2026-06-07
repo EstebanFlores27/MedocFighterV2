@@ -3,6 +3,7 @@ extends Node2D
 @onready var home_btn: TextureButton = $HomeLayer/HomeButton
 
 func _ready() -> void:
+	AudioManager.play_background()
 	var tex := load("res://assets/boutons/home.png") as Texture2D
 	if tex:
 		home_btn.texture_normal = tex

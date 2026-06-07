@@ -25,6 +25,7 @@ var _is_typing: bool = false
 var _text_tween: Tween
 
 func _ready() -> void:
+	AudioManager.play_background()
 	next_btn.pressed.connect(_advance)
 	skip_btn.pressed.connect(_skip)
 	player_rect.color = Color(0.60, 0.45, 0.54) if GameState.player_gender == 1 else Color(0.42, 0.45, 0.60)
