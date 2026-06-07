@@ -18,7 +18,7 @@ signal district_cleared(district: int)
 signal health_state_changed(state: int)
 @warning_ignore_restore("unused_signal")
 
-const DISTRICT_CHRONIK_COUNT := {1: 2, 2: 4, 3: 4, 4: 1}
+const DISTRICT_CHRONIK_COUNT := {1: 2, 2: 4, 3: 1}
 const SAVE_PATH := "user://save.cfg"
 const DAY_SECS := 86400
 const STATE_BLEAK := 0

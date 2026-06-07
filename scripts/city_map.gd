@@ -3,20 +3,17 @@ extends Control
 const DISTRICT_NAMES := {
 	1: "1. Place centrale",
 	2: "2. Centre commercial",
-	3: "3. Parc",
-	4: "4. Hôpital",
+	3: "3. Hôpital",
 }
 const DISTRICT_DESC := {
 	1: "Cortexia • Epidermos",
 	2: "Pancréok • Hépatox • Gastrix • Nefronix",
-	3: "Kardiox • Pulmos • Ostéox • Articulix",
-	4: "Boss final",
+	3: "Boss final",
 }
 const DISTRICT_SCENES := {
 	1: "res://scenes/level.tscn",
-	2: "res://scenes/level.tscn",
-	3: "res://scenes/level.tscn",
-	4: "res://scenes/level.tscn",
+	2: "res://scenes/level_2.tscn",
+	3: "res://scenes/level_3.tscn",
 }
 
 const SETTINGS_OVERLAY := preload("res://scenes/settings_overlay.tscn")
@@ -29,7 +26,6 @@ const MAP_HINT := "Bienvenue à Seek City ! Entre dans un quartier et bats tous 
 	1: $CenterContainer/Grid/D1Card,
 	2: $CenterContainer/Grid/D2Card,
 	3: $CenterContainer/Grid/D3Card,
-	4: $CenterContainer/Grid/D4Card,
 }
 @onready var boost_streak_lbl: Label = $BoostPanel/VBox/StreakLabel
 @onready var boost_gauge: TextureRect = $BoostPanel/VBox/Gauge

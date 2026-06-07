@@ -14,9 +14,9 @@ const PAGES: Array[String] = [
 	"Allez, en route ! Le dôme s'ouvre. La carte de Seek City t'attend.",
 ]
 
-@onready var dialog_label: Label = $DialogPanel/Margin/VBox/DialogLabel
-@onready var page_label: Label = $DialogPanel/Margin/VBox/NextRow/PageLabel
-@onready var next_btn: Button = $DialogPanel/Margin/VBox/NextRow/NextBtn
+@onready var dialog_label: Label = $DialogBox/DialogLabel
+@onready var page_label: Label = $DialogBox/NextRow/PageLabel
+@onready var next_btn: Button = $DialogBox/NextRow/NextBtn
 @onready var skip_btn: Button = $TopBar/SkipBtn
 @onready var player_rect: ColorRect = $Player
 
