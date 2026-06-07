@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://scripts/combat_hud.gd" id="1_hud"]
 [ext_resource type="Texture2D" path="res://assets/boiteMedicament/pilule soin.png" id="2_soin"]
@@ -9,6 +9,10 @@
 [ext_resource type="Texture2D" path="res://assets/boiteMedicament/boite_vide.png" id="7_tray"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pause"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pause"]
+atlas = ExtResource("5_pause")
+region = Rect2(113, 102, 274, 290)
 
 [node name="CombatHUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
@@ -163,7 +167,7 @@ theme_override_styles/pressed = SubResource("StyleBoxEmpty_pause")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_pause")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_pause")
 flat = true
-icon = ExtResource("5_pause")
+icon = SubResource("AtlasTexture_pause")
 icon_alignment = 1
 vertical_icon_alignment = 1
 expand_icon = true
