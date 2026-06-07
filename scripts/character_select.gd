@@ -6,6 +6,7 @@ extends Control
 @onready var female_image: TextureRect = $CenterContainer/VBox/HBox/FemaleCard/FemaleImage
 
 func _ready() -> void:
+	AudioManager.play_background()
 	male_btn.pressed.connect(_on_choose_male)
 	female_btn.pressed.connect(_on_choose_female)
 	male_btn.grab_focus()

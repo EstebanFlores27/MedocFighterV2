@@ -8,6 +8,7 @@ const SETTINGS_OVERLAY := preload("res://scenes/settings_overlay.tscn")
 @onready var quit_btn: Button = $CenterContainer/VBox/QuitBtn
 
 func _ready() -> void:
+	AudioManager.play_background()
 	new_game_btn.pressed.connect(_on_new_game)
 	continue_btn.pressed.connect(_on_continue)
 	settings_btn.pressed.connect(_on_settings)

@@ -193,7 +193,7 @@ clip_contents = true
 modulate = Color(1, 1, 1, 0.7)
 custom_minimum_size = Vector2(440, 220)
 layout_mode = 2
-theme_override_styles/panel = SubResource("sb_d3")
+theme_override_styles/panel = SubResource("sb_d4")
 
 [node name="VBox" type="VBoxContainer" parent="CenterContainer/Grid/D3Card" unique_id=1091566416]
 layout_mode = 2
@@ -202,13 +202,13 @@ theme_override_constants/separation = 8
 [node name="Name" type="Label" parent="CenterContainer/Grid/D3Card/VBox" unique_id=1865953408]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
-text = "3. Parc"
+text = "3. Hôpital"
 horizontal_alignment = 1
 
 [node name="Description" type="Label" parent="CenterContainer/Grid/D3Card/VBox" unique_id=737086724]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-text = "Kardiox • Pulmos • Ostéox • Articulix"
+text = "Boss final"
 horizontal_alignment = 1
 
 [node name="Status" type="Label" parent="CenterContainer/Grid/D3Card/VBox" unique_id=2015860650]
@@ -218,42 +218,6 @@ text = "Verrouillé"
 horizontal_alignment = 1
 
 [node name="EnterBtn" type="Button" parent="CenterContainer/Grid/D3Card/VBox" unique_id=1505410182]
-custom_minimum_size = Vector2(0, 50)
-layout_mode = 2
-theme_override_font_sizes/font_size = 22
-disabled = true
-text = "Verrouillé"
-
-[node name="D4Card" type="PanelContainer" parent="CenterContainer/Grid" unique_id=106177488]
-clip_contents = true
-modulate = Color(1, 1, 1, 0.7)
-custom_minimum_size = Vector2(440, 220)
-layout_mode = 2
-theme_override_styles/panel = SubResource("sb_d4")
-
-[node name="VBox" type="VBoxContainer" parent="CenterContainer/Grid/D4Card" unique_id=152643363]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="Name" type="Label" parent="CenterContainer/Grid/D4Card/VBox" unique_id=187868673]
-layout_mode = 2
-theme_override_font_sizes/font_size = 28
-text = "4. Hôpital"
-horizontal_alignment = 1
-
-[node name="Description" type="Label" parent="CenterContainer/Grid/D4Card/VBox" unique_id=236235953]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Boss final"
-horizontal_alignment = 1
-
-[node name="Status" type="Label" parent="CenterContainer/Grid/D4Card/VBox" unique_id=1408528422]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Verrouillé"
-horizontal_alignment = 1
-
-[node name="EnterBtn" type="Button" parent="CenterContainer/Grid/D4Card/VBox" unique_id=1009292207]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 22

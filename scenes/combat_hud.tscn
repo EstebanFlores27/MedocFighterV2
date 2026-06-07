@@ -370,7 +370,7 @@ icon = ExtResource("3_vitesse")
 icon_alignment = 1
 vertical_icon_alignment = 1
 expand_icon = true
-tooltip_text = "Vitesse — ×2 vitesse pendant 10 s. (touche 2)"
+tooltip_text = "Vitesse — ×2 vitesse pendant 10 s. (touche 1)"
 
 [node name="SoinBtn" type="Button" parent="Root/MedTray"]
 offset_right = 80.0
@@ -387,7 +387,7 @@ icon = ExtResource("2_soin")
 icon_alignment = 1
 vertical_icon_alignment = 1
 expand_icon = true
-tooltip_text = "Soin — restaure +20 PV. (touche 1)"
+tooltip_text = "Soin — restaure +20 PV. (touche 2)"
 
 [node name="ForceBtn" type="Button" parent="Root/MedTray"]
 offset_right = 80.0

@@ -6,12 +6,12 @@ const BUFF_DURATION := 10.0
 const LOW_HP_RATIO := 0.3
 
 const HINT_CHRONIK := "Un Chronik ! Frappe avec X, et baisse-toi (▼) pour esquiver. Vide sa jauge de vie pour le vaincre."
-const HINT_MEDS := "Ta boîte de médocs ! Soin (1) rend des PV, Vitesse (2) et Force (3) te boostent 10 s. Une seule dose de chaque — choisis le bon moment."
-const HINT_LOW_HP := "Tes PV sont bas ! Utilise Soin (1) pour récupérer +20 PV."
+const HINT_MEDS := "Ta boîte de médocs ! Vitesse (1) et Force (3) te boostent 10 s, Soin (2) rend des PV. Une seule dose de chaque — choisis le bon moment."
+const HINT_LOW_HP := "Tes PV sont bas ! Utilise Soin (2) pour récupérer +20 PV."
 
 const MED_KEYS := {
-	KEY_1: "soin",
-	KEY_2: "vitesse",
+	KEY_1: "vitesse",
+	KEY_2: "soin",
 	KEY_3: "force",
 }
 # Centers of the lower compartments in the boite_vide tray (fractions of size).
@@ -199,8 +199,12 @@ func _on_defeat_map_pressed() -> void:
 
 func _on_continue_pressed() -> void:
 	if _pending_district_cleared > 0:
-		_show_district_cleared_panel(_pending_district_cleared)
+		var district := _pending_district_cleared
 		_pending_district_cleared = 0
+		if GameState.is_final_district(district):
+			get_tree().change_scene_to_file("res://scenes/ending.tscn")
+			return
+		_show_district_cleared_panel(district)
 		_showing_district_panel = true
 		return
 	if _showing_district_panel:
