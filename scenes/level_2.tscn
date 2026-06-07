@@ -122,9 +122,12 @@ victory_text = "Tu as préservé tes reins ! Ils continuent d'éliminer les déc
 layer = 10
 
 [node name="HomeButton" type="TextureButton" parent="HomeLayer"]
-offset_left = 40.0
-offset_top = 140.0
-offset_right = 120.0
-offset_bottom = 220.0
+layout_mode = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -200.0
+offset_top = 12.0
+offset_right = -120.0
+offset_bottom = 92.0
 ignore_texture_size = true
 stretch_mode = 5
