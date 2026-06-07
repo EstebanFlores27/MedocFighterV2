@@ -125,7 +125,6 @@ var _walk_t := 0.0
 @onready var sprite: Sprite2D = $Sprite
 @onready var collider: CollisionShape2D = $Collider
 @onready var punch_hitbox: Area2D = $PunchHitbox
-@onready var punch_visual: ColorRect = $PunchHitbox/PunchVisual
 
 var hp: int = MAX_HP
 var facing: int = 1
@@ -154,7 +153,6 @@ func _ready() -> void:
 	_default_collider_pos = collider.position
 	_default_punch_offset = abs(punch_hitbox.position.x)
 	punch_hitbox.monitoring = false
-	punch_visual.visible = false
 
 	if GameState.player_gender == 0:
 		_state_names = MALE_STATE_NAMES
@@ -303,7 +301,6 @@ func _start_punch() -> void:
 	_punch_cd = PUNCH_COOLDOWN
 	_punch_t = PUNCH_DURATION
 	punch_hitbox.position.x = _default_punch_offset * facing
-	punch_visual.visible = true
 	punch_hitbox.monitoring = true
 	await get_tree().physics_frame
 	if not is_inside_tree() or _punch_t <= 0.0:
@@ -315,7 +312,6 @@ func _start_punch() -> void:
 
 func _end_punch() -> void:
 	punch_hitbox.monitoring = false
-	punch_visual.visible = false
 
 func take_damage(amount: int, from_dir: int) -> void:
 	if _invuln_t > 0.0 or hp <= 0:
