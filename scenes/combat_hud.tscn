@@ -331,14 +331,14 @@ text = "Retour à la carte"
 
 [node name="MedTray" type="Control" parent="Root"]
 layout_mode = 1
-anchor_left = 0.5
-anchor_right = 0.5
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = -150.0
-offset_top = -206.0
-offset_right = 150.0
-offset_bottom = -6.0
+anchor_left = 0.0
+anchor_right = 0.0
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 40.0
+offset_top = -120.0
+offset_right = 400.0
+offset_bottom = 120.0
 mouse_filter = 2
 
 [node name="Tray" type="TextureRect" parent="Root/MedTray"]

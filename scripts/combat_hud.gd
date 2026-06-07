@@ -75,7 +75,7 @@ func _ready() -> void:
 	force_bar.max_value = BUFF_DURATION
 	_guide = GUIDE_BUBBLE.instantiate()
 	add_child(_guide)
-	_guide.place_top()
+	_guide.place_bottom_center()
 	_update_objective()
 	call_deferred("_layout_dynamic")
 	GameState.player_hp_changed.connect(_on_player_hp_changed)
